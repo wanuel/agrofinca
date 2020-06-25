@@ -1,0 +1,111 @@
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'VACA JANNETH', NULL, NULL, 'HEMBRA');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'VACA BLANCA', NULL, NULL, 'HEMBRA');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'VACA BLANCA TOPA (CAMBIO)', NULL, NULL, 'HEMBRA');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'NOVILLO JANNETH', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'TERNERO JANNETH', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 1', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 2', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 3', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 4', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 5', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 6', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 7', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 8', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 9', NULL, NULL, 'MACHO');
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`) VALUES (5, 2, 'ROJO 10', NULL, NULL, 'MACHO');
+
+
+1. TORO BLANCO
+2. VACA JANNETH
+3. VACA BLANCA
+4. VACA BLANCA TOPA
+5. NOVILLO JANNETH
+6. TERNERO JANNETH
+7. ROJO 1
+8. ROJO 2
+9. ROJO 3
+10. ROJO 4
+11. ROJO 5
+12. ROJO 6
+13. ROJO 7
+14. ROJO 8
+15.. ROJO 9
+16. ROJO 10
+
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 1);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 2);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 3);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 4);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 5);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 6);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 7);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 8);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 9);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 10);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 11);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 12);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 13);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 14);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 15);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 16);
+
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 32);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 33);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 34);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 35);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 36);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (1, 37);
+
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 1);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 2);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 3);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 4);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 5);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 6);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 7);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 8);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 9);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 10);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 11);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 12);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 13);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 14);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 15);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 16);
+
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 32);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 33);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 34);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 35);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 36);
+INSERT INTO `animal_pastoreo` (`potrero`, `animal`) VALUES (2, 37);
+
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`, `castrado`, `fecha_castracion`) VALUES (6, 16, 'CORONELL', NULL, NULL, 'MACHO', 'SI', NULL);
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`, `castrado`, `fecha_castracion`) VALUES (6, 16, 'MORO BLANCO', NULL, NULL, 'MACHO', 'SI', NULL);
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`, `castrado`, `fecha_castracion`) VALUES (6, 16, 'CASTAÑO MECHUDO', NULL, NULL, 'MACHO', 'SI', NULL);
+INSERT INTO `animal` (`tipo`, `raza`, `nombre`, `fecha_nacimiento`, `fecha_compra`, `genero`, `castrado`, `fecha_castracion`) VALUES (6, 16, 'MORO BLANCO', NULL, NULL, 'MACHO', 'SI', NULL);
+
+
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 1);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 2);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 3);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 5);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 6);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 7);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 8);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 9);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 10);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 11);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 12);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 13);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 14);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 15);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 16);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 32);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 33);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 34);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 35);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 36);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 37);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 38);
+INSERT INTO `animal_pastoreo` (`pastoreo`, `animal`) VALUES (3, 39);

@@ -1,0 +1,43 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "co.cima.agrofinca",
+      "nativeLanguage": "es"
+    },
+    "jhipsterVersion": "6.9.1",
+    "applicationType": "monolith",
+    "baseName": "agrofinca",
+    "packageName": "co.cima.agrofinca",
+    "packageFolder": "co/cima/agrofinca",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "ZTAyNmVlOTZhZTNhYTkzYTMwMjZmMTNiNmJjNTA3NTdkN2Y4YjcyNDE3MDM3MWE5MjI1YWE5MTg2NTkxMWQ4M2Y5MjY1NTVhZmMyZTdjNTBiZGE1YmE0NGVjODhlOTVkZDhkYzNkNDI5YjJjMDE4Y2FiMmQ3NmYwODIyMzVmMDU=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "react",
+    "clientTheme": "lux",
+    "clientThemeVariant": "light",
+    "creationTimestamp": 1593124312886,
+    "testFrameworks": ["gatling"],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": true,
+    "nativeLanguage": "es",
+    "languages": ["es"],
+    "blueprints": [],
+    "reactive": true
+  }
+}
