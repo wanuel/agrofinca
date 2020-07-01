@@ -1,100 +1,146 @@
 package co.cima.agrofinca.config;
 
-import co.cima.agrofinca.security.AuthoritiesConstants;
-import co.cima.agrofinca.security.jwt.JWTFilter;
-import co.cima.agrofinca.security.jwt.TokenProvider;
-import co.cima.agrofinca.web.filter.SpaWebFilter;
+import co.cima.agrofinca.security.*;
+
+import io.github.jhipster.config.JHipsterProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.ReactiveAuthenticationManager;
-import org.springframework.security.authentication.UserDetailsRepositoryReactiveAuthenticationManager;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.header.ReferrerPolicyServerHttpHeadersWriter;
-import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
-import org.springframework.security.web.server.util.matcher.OrServerWebExchangeMatcher;
-import org.zalando.problem.spring.webflux.advice.security.SecurityProblemSupport;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import co.cima.agrofinca.security.oauth2.AudienceValidator;
+import co.cima.agrofinca.security.SecurityUtils;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
+import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
+import java.util.*;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import co.cima.agrofinca.security.oauth2.JwtGrantedAuthorityConverter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.web.filter.CorsFilter;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 
-import static org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers.pathMatchers;
-
-@EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Import(SecurityProblemSupport.class)
-public class SecurityConfiguration {
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final ReactiveUserDetailsService userDetailsService;
+    private final CorsFilter corsFilter;
 
-    private final TokenProvider tokenProvider;
+    @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
+    private String issuerUri;
 
+    private final JHipsterProperties jHipsterProperties;
     private final SecurityProblemSupport problemSupport;
 
-    public SecurityConfiguration(ReactiveUserDetailsService userDetailsService, TokenProvider tokenProvider, SecurityProblemSupport problemSupport) {
-        this.userDetailsService = userDetailsService;
-        this.tokenProvider = tokenProvider;
+    public SecurityConfiguration(CorsFilter corsFilter, JHipsterProperties jHipsterProperties, SecurityProblemSupport problemSupport) {
+        this.corsFilter = corsFilter;
         this.problemSupport = problemSupport;
+        this.jHipsterProperties = jHipsterProperties;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+            .antMatchers(HttpMethod.OPTIONS, "/**")
+            .antMatchers("/app/**/*.{js,html}")
+            .antMatchers("/i18n/**")
+            .antMatchers("/content/**")
+            .antMatchers("/swagger-ui/index.html")
+            .antMatchers("/test/**")
+            .antMatchers("/app/**");
     }
 
-    @Bean
-    public ReactiveAuthenticationManager reactiveAuthenticationManager() {
-        UserDetailsRepositoryReactiveAuthenticationManager authenticationManager = new UserDetailsRepositoryReactiveAuthenticationManager(userDetailsService);
-        authenticationManager.setPasswordEncoder(passwordEncoder());
-        return authenticationManager;
-    }
-
-    @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-            .securityMatcher(new NegatedServerWebExchangeMatcher(new OrServerWebExchangeMatcher(
-                pathMatchers("/app/**", "/i18n/**", "/content/**", "/swagger-ui/**", "/test/**", "/webjars/**"),
-                pathMatchers(HttpMethod.OPTIONS, "/**")
-            )))
             .csrf()
-                .disable()
-            .addFilterAt(new SpaWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
-            .addFilterAt(new JWTFilter(tokenProvider), SecurityWebFiltersOrder.HTTP_BASIC)
-            .authenticationManager(reactiveAuthenticationManager())
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .and()
+            .addFilterBefore(corsFilter, CsrfFilter.class)
             .exceptionHandling()
-                .accessDeniedHandler(problemSupport)
                 .authenticationEntryPoint(problemSupport)
+                .accessDeniedHandler(problemSupport)
         .and()
             .headers()
-                .contentSecurityPolicy("default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:")
-            .and()
-                .referrerPolicy(ReferrerPolicyServerHttpHeadersWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
-            .and()
-                .featurePolicy("geolocation 'none'; midi 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; fullscreen 'self'; payment 'none'")
-            .and()
-                .frameOptions().disable()
+            .contentSecurityPolicy("default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:")
         .and()
-            .authorizeExchange()
-            .pathMatchers("/").permitAll()
-            .pathMatchers("/*.*").permitAll()
-            .pathMatchers("/api/register").permitAll()
-            .pathMatchers("/api/activate").permitAll()
-            .pathMatchers("/api/authenticate").permitAll()
-            .pathMatchers("/api/account/reset-password/init").permitAll()
-            .pathMatchers("/api/account/reset-password/finish").permitAll()
-            .pathMatchers("/api/auth-info").permitAll()
-            .pathMatchers("/api/**").authenticated()
-            .pathMatchers("/services/**", "/swagger-resources/**", "/v2/api-docs").authenticated()
-            .pathMatchers("/management/health").permitAll()
-            .pathMatchers("/management/info").permitAll()
-            .pathMatchers("/management/prometheus").permitAll()
-            .pathMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN);
+            .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+        .and()
+            .featurePolicy("geolocation 'none'; midi 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; fullscreen 'self'; payment 'none'")
+        .and()
+            .frameOptions()
+            .deny()
+        .and()
+            .authorizeRequests()
+            .antMatchers("/api/auth-info").permitAll()
+            .antMatchers("/api/**").authenticated()
+            .antMatchers("/management/health").permitAll()
+            .antMatchers("/management/info").permitAll()
+            .antMatchers("/management/prometheus").permitAll()
+            .antMatchers("/management/**").hasAuthority(AuthoritiesConstants.ADMIN)
+        .and()
+            .oauth2Login()
+        .and()
+            .oauth2ResourceServer()
+                .jwt()
+                .jwtAuthenticationConverter(authenticationConverter())
+                .and()
+            .and()
+                .oauth2Client();
         // @formatter:on
-        return http.build();
+    }
+
+    Converter<Jwt, AbstractAuthenticationToken> authenticationConverter() {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new JwtGrantedAuthorityConverter());
+        return jwtAuthenticationConverter;
+    }
+    /**
+     * Map authorities from "groups" or "roles" claim in ID Token.
+     *
+     * @return a {@link GrantedAuthoritiesMapper} that maps groups from
+     * the IdP to Spring Security Authorities.
+     */
+    @Bean
+    public GrantedAuthoritiesMapper userAuthoritiesMapper() {
+        return (authorities) -> {
+            Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
+
+            authorities.forEach(authority -> {
+                // Check for OidcUserAuthority because Spring Security 5.2 returns
+                // each scope as a GrantedAuthority, which we don't care about.
+                if (authority instanceof OidcUserAuthority) {
+                    OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
+                    mappedAuthorities.addAll(SecurityUtils.extractAuthorityFromClaims(oidcUserAuthority.getUserInfo().getClaims()));
+                }
+            });
+            return mappedAuthorities;
+        };
+    }
+
+    @Bean
+    JwtDecoder jwtDecoder() {
+        NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
+
+        OAuth2TokenValidator<Jwt> audienceValidator = new AudienceValidator(jHipsterProperties.getSecurity().getOauth2().getAudience());
+        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
+        OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
+
+        jwtDecoder.setJwtValidator(withAudience);
+
+        return jwtDecoder;
     }
 }

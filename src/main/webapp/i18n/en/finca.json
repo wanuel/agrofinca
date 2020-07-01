@@ -1,0 +1,23 @@
+{
+  "agrofincaApp": {
+    "finca": {
+      "home": {
+        "title": "Fincas",
+        "createLabel": "Create a new Finca",
+        "createOrEditLabel": "Create or edit a Finca",
+        "notFound": "No Fincas found"
+      },
+      "created": "A new Finca is created with identifier {{ param }}",
+      "updated": "A Finca is updated with identifier {{ param }}",
+      "deleted": "A Finca is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Finca {{ id }}?"
+      },
+      "detail": {
+        "title": "Finca"
+      },
+      "nombre": "Nombre",
+      "area": "Area"
+    }
+  }
+}

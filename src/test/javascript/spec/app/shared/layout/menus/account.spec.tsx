@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
+import { getLoginUrl } from 'app/shared/util/url-utils';
 import { NavDropdown } from 'app/shared/layout/menus/menu-components';
 import { AccountMenu } from 'app/shared/layout/menus';
 
@@ -36,7 +37,7 @@ describe('AccountMenu', () => {
   it('Renders a guest AccountMenu component', () => {
     const dropdown = guestWrapper().find(NavDropdown);
     expect(dropdown).toHaveLength(1);
-    expect(dropdown.find({ to: '/login' })).toHaveLength(1);
+    expect(dropdown.find({ href: getLoginUrl() })).toHaveLength(1);
     expect(dropdown.find({ to: '/logout' })).toHaveLength(0);
   });
 });

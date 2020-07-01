@@ -6,13 +6,9 @@ import authentication, { AuthenticationState } from './authentication';
 import applicationProfile, { ApplicationProfileState } from './application-profile';
 
 import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
-import userManagement, { UserManagementState } from 'app/modules/administration/user-management/user-management.reducer';
-import register, { RegisterState } from 'app/modules/account/register/register.reducer';
-import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
-import password, { PasswordState } from 'app/modules/account/password/password.reducer';
-import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
-import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+import userManagement, { UserManagementState } from './user-management';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
+import finca, { FincaState } from 'app/entities/finca/finca.reducer';
 
 export interface IRootState {
   readonly authentication: AuthenticationState;
@@ -20,11 +16,7 @@ export interface IRootState {
   readonly applicationProfile: ApplicationProfileState;
   readonly administration: AdministrationState;
   readonly userManagement: UserManagementState;
-  readonly register: RegisterState;
-  readonly activate: ActivateState;
-  readonly passwordReset: PasswordResetState;
-  readonly password: PasswordState;
-  readonly settings: SettingsState;
+  readonly finca: FincaState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -35,12 +27,8 @@ const rootReducer = combineReducers<IRootState>({
   applicationProfile,
   administration,
   userManagement,
-  register,
-  activate,
-  passwordReset,
-  password,
-  settings,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
+  finca,
   loadingBar,
 });
 

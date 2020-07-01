@@ -2,10 +2,10 @@ package co.cima.agrofinca.repository;
 
 import co.cima.agrofinca.domain.Authority;
 
-import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Spring Data R2DBC repository for the {@link Authority} entity.
+ * Spring Data JPA repository for the {@link Authority} entity.
  */
-public interface AuthorityRepository extends R2dbcRepository<Authority, String> {
+public interface AuthorityRepository extends JpaRepository<Authority, String> {
 }
