@@ -5,26 +5,40 @@ import { Switch } from 'react-router-dom';
 import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
 /* jhipster-needle-add-route-import - JHipster will add routes here */
-import { AUTHORITIES } from 'app/config/constants';
-import PrivateRoute from 'app/shared/auth/private-route';
-import Finca from './finca/finca';
-import FincaDetail from './finca/finca-detail';
-import FincaUpdate from './finca/finca-update';
-import FincaDeleteDialog from './finca/finca-delete-dialog';
+import Finca from './finca';
+import Potrero from './potrero';
+import Persona from './persona';
+import PotreroActividad from './potrero-actividad';
+import Animal from './animal';
+import AnimalFicha from './animal-ficha';
+import Parametros from './parametros';
+import AnimalCostos from './animal-costos';
+import AnimalEvento from './animal-evento';
+import AnimalPeso from './animal-peso';
+import AnimalImagen from './animal-imagen';
+import AnimalVacunas from './animal-vacunas';
+import PotreroActividadAnimal from './potrero-actividad-animal';
 
 const Routes = ({ match }) => (
-  <div>
-    <Switch>
-      {/* prettier-ignore */}
-      {/* jhipster-needle-add-route-path - JHipster will add routes here */}
-	  <PrivateRoute path="/finca" component={Finca} hasAnyAuthorities={[AUTHORITIES.USER]} />
-	  <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={FincaDeleteDialog} />
-      <ErrorBoundaryRoute exact path={`${match.url}/new`} component={FincaUpdate} />
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={FincaUpdate} />
-      <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={FincaDetail} />
-      <ErrorBoundaryRoute path={match.url} component={Finca} />
-    </Switch>
-  </div>
+	<div>
+		<Switch>
+			{/* prettier-ignore */}
+			{/* jhipster-needle-add-route-path - JHipster will add routes here */}
+			<ErrorBoundaryRoute path={`${match.url}finca`} component={Finca} />
+			<ErrorBoundaryRoute path={`${match.url}potrero`} component={Potrero} />
+			<ErrorBoundaryRoute path={`${match.url}persona`} component={Persona} />
+			<ErrorBoundaryRoute path={`${match.url}potrero-actividad`} component={PotreroActividad} />
+			<ErrorBoundaryRoute path={`${match.url}animal`} component={Animal} />
+			<ErrorBoundaryRoute path={`${match.url}parametros`} component={Parametros} />
+			<ErrorBoundaryRoute path={`${match.url}animal-costos`} component={AnimalCostos} />
+			<ErrorBoundaryRoute path={`${match.url}animal-evento`} component={AnimalEvento} />
+			<ErrorBoundaryRoute path={`${match.url}animal-peso`} component={AnimalPeso} />
+			<ErrorBoundaryRoute path={`${match.url}animal-imagen`} component={AnimalImagen} />
+			<ErrorBoundaryRoute path={`${match.url}animal-vacunas`} component={AnimalVacunas} />
+			<ErrorBoundaryRoute path={`${match.url}potrero-actividad-animal`} component={PotreroActividadAnimal} />
+			<ErrorBoundaryRoute path={`${match.url}animal-ficha`} component={AnimalFicha} />
+		</Switch>
+	</div>
 );
 
 export default Routes;

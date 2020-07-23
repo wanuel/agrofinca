@@ -1,0 +1,23 @@
+{
+  "agrofincaApp": {
+    "potreroActividadAnimal": {
+      "home": {
+        "title": "Potrero Actividad Animals",
+        "createLabel": "Create a new Potrero Actividad Animal",
+        "createOrEditLabel": "Create or edit a Potrero Actividad Animal",
+        "notFound": "No Potrero Actividad Animals found"
+      },
+      "created": "A new Potrero Actividad Animal is created with identifier {{ param }}",
+      "updated": "A Potrero Actividad Animal is updated with identifier {{ param }}",
+      "deleted": "A Potrero Actividad Animal is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Potrero Actividad Animal {{ id }}?"
+      },
+      "detail": {
+        "title": "Potrero Actividad Animal"
+      },
+      "animalId": "Animal Id",
+      "potreroActividadId": "Potrero Actividad Id"
+    }
+  }
+}

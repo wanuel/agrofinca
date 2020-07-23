@@ -26,7 +26,7 @@
     "useSass": true,
     "clientPackageManager": "npm",
     "clientFramework": "react",
-    "clientTheme": "flatly",
+    "clientTheme": "sandstone",
     "clientThemeVariant": "light",
     "creationTimestamp": 1593202540991,
     "testFrameworks": [],
@@ -38,6 +38,6 @@
     "nativeLanguage": "es",
     "languages": ["es", "en"],
     "blueprints": [],
-    "lastLiquibaseTimestamp": 1593390233000
+    "lastLiquibaseTimestamp": 1594237273000
   }
 }

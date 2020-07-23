@@ -3,8 +3,6 @@ package co.cima.agrofinca.web.rest;
 import co.cima.agrofinca.domain.Finca;
 import co.cima.agrofinca.service.FincaService;
 import co.cima.agrofinca.web.rest.errors.BadRequestAlertException;
-import co.cima.agrofinca.service.dto.FincaCriteria;
-import co.cima.agrofinca.service.FincaQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -42,11 +40,8 @@ public class FincaResource {
 
     private final FincaService fincaService;
 
-    private final FincaQueryService fincaQueryService;
-
-    public FincaResource(FincaService fincaService, FincaQueryService fincaQueryService) {
+    public FincaResource(FincaService fincaService) {
         this.fincaService = fincaService;
-        this.fincaQueryService = fincaQueryService;
     }
 
     /**
@@ -93,27 +88,14 @@ public class FincaResource {
      * {@code GET  /fincas} : get all the fincas.
      *
      * @param pageable the pagination information.
-     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of fincas in body.
      */
     @GetMapping("/fincas")
-    public ResponseEntity<List<Finca>> getAllFincas(FincaCriteria criteria, Pageable pageable) {
-        log.debug("REST request to get Fincas by criteria: {}", criteria);
-        Page<Finca> page = fincaQueryService.findByCriteria(criteria, pageable);
+    public ResponseEntity<List<Finca>> getAllFincas(Pageable pageable) {
+        log.debug("REST request to get a page of Fincas");
+        Page<Finca> page = fincaService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    /**
-     * {@code GET  /fincas/count} : count all the fincas.
-     *
-     * @param criteria the criteria which the requested entities should match.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
-     */
-    @GetMapping("/fincas/count")
-    public ResponseEntity<Long> countFincas(FincaCriteria criteria) {
-        log.debug("REST request to count Fincas by criteria: {}", criteria);
-        return ResponseEntity.ok().body(fincaQueryService.countByCriteria(criteria));
     }
 
     /**

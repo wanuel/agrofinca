@@ -6,8 +6,53 @@
       "home": "Home",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
-        "main": "Entities",
+        "main": "Entidades",
+        "finca": "Finca",
+        "potrero": "Potrero",
+        "potreroActividad": "Potrero Actividad",
+        "animal": "Animal",
+        "animalPastoreo": "Animal Pastoreo",
+        "parametros": "Parametros",
+        "animalCostos": "Animal Costos",
+        "animalEvento": "Animal Evento",
+        "animalPeso": "Animal Peso",
+        "animalImagen": "Animal Imagen",
+        "animalVacunas": "Animal Vacunas",
+        "persona": "Persona",
+        "potreroActividadAnimal": "Potrero Actividad Animal",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
+      },
+      "finca": {
+        "main": "Finca",
+        "finca": "Fincas",
+        "potrero": "Potreros",
+        "potreroActividad": "Potrero Actividad"
+      },
+      "animal": {
+        "main": "Animales",
+        "animal": "Animal",
+        "animalFicha": "Ficha Animal",
+        "animalPastoreo": "Animal Pastoreo",
+        "animalCostos": "Animal Costos",
+        "animalEvento": "Animal Evento",
+        "animalPeso": "Animal Peso",
+        "animalImagen": "Animal Imagen",
+        "animalVacunas": "Animal Vacunas"
+      },
+      "contabilidad": {
+        "main": "Contabilidad",
+        "persona": "Persona",
+        "sociedad": "Sociedad"
+      },
+      "inventario": {
+        "main": "Inventario",
+        "herramienta": "Herramientas",
+        "maquinaria": "Maquinaria",
+        "equipo": "Equipo"
+      },
+      "configuracion": {
+        "main": "Configuración",
+        "parametros": "Parametros"
       },
       "account": {
         "main": "Account",

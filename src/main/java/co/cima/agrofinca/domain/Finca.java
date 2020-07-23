@@ -8,6 +8,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Finca.
@@ -23,12 +25,16 @@ public class Finca implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre")
+    @NotNull
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @NotNull
-    @Column(name = "area", precision = 21, scale = 2, nullable = false)
+    @Column(name = "area", precision = 21, scale = 2)
     private BigDecimal area;
+
+    @OneToMany(mappedBy = "finca")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Potrero> potreros = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -63,6 +69,31 @@ public class Finca implements Serializable {
 
     public void setArea(BigDecimal area) {
         this.area = area;
+    }
+
+    public Set<Potrero> getPotreros() {
+        return potreros;
+    }
+
+    public Finca potreros(Set<Potrero> potreros) {
+        this.potreros = potreros;
+        return this;
+    }
+
+    public Finca addPotreros(Potrero potrero) {
+        this.potreros.add(potrero);
+        potrero.setFinca(this);
+        return this;
+    }
+
+    public Finca removePotreros(Potrero potrero) {
+        this.potreros.remove(potrero);
+        potrero.setFinca(null);
+        return this;
+    }
+
+    public void setPotreros(Set<Potrero> potreros) {
+        this.potreros = potreros;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

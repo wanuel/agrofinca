@@ -1,0 +1,30 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "animalId",
+      "otherEntityName": "animal",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "pastoreo",
+      "otherEntityRelationshipName": "potreroActividadAnimal"
+    },
+    {
+      "relationshipName": "potreroActividadId",
+      "otherEntityName": "potreroActividad",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "pastoreo",
+      "otherEntityRelationshipName": "potreroActividadAnimal"
+    }
+  ],
+  "fields": [],
+  "changelogDate": "20200708194113",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "serviceImpl",
+  "entityTableName": "potrero_actividad_animal",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "infinite-scroll"
+}

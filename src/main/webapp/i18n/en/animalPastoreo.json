@@ -1,0 +1,21 @@
+{
+  "agrofincaApp": {
+    "animalPastoreo": {
+      "home": {
+        "title": "Animal Pastoreos",
+        "createLabel": "Create a new Animal Pastoreo",
+        "createOrEditLabel": "Create or edit a Animal Pastoreo",
+        "notFound": "No Animal Pastoreos found"
+      },
+      "created": "A new Animal Pastoreo is created with identifier {{ param }}",
+      "updated": "A Animal Pastoreo is updated with identifier {{ param }}",
+      "deleted": "A Animal Pastoreo is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Animal Pastoreo {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Pastoreo"
+      }
+    }
+  }
+}

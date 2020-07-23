@@ -5,8 +5,6 @@ import co.cima.agrofinca.config.TestSecurityConfiguration;
 import co.cima.agrofinca.domain.Finca;
 import co.cima.agrofinca.repository.FincaRepository;
 import co.cima.agrofinca.service.FincaService;
-import co.cima.agrofinca.service.dto.FincaCriteria;
-import co.cima.agrofinca.service.FincaQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,16 +38,12 @@ public class FincaResourceIT {
 
     private static final BigDecimal DEFAULT_AREA = new BigDecimal(1);
     private static final BigDecimal UPDATED_AREA = new BigDecimal(2);
-    private static final BigDecimal SMALLER_AREA = new BigDecimal(1 - 1);
 
     @Autowired
     private FincaRepository fincaRepository;
 
     @Autowired
     private FincaService fincaService;
-
-    @Autowired
-    private FincaQueryService fincaQueryService;
 
     @Autowired
     private EntityManager em;
@@ -129,10 +123,10 @@ public class FincaResourceIT {
 
     @Test
     @Transactional
-    public void checkAreaIsRequired() throws Exception {
+    public void checkNombreIsRequired() throws Exception {
         int databaseSizeBeforeTest = fincaRepository.findAll().size();
         // set the field null
-        finca.setArea(null);
+        finca.setNombre(null);
 
         // Create the Finca, which fails.
 
@@ -175,244 +169,6 @@ public class FincaResourceIT {
             .andExpect(jsonPath("$.nombre").value(DEFAULT_NOMBRE))
             .andExpect(jsonPath("$.area").value(DEFAULT_AREA.intValue()));
     }
-
-
-    @Test
-    @Transactional
-    public void getFincasByIdFiltering() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        Long id = finca.getId();
-
-        defaultFincaShouldBeFound("id.equals=" + id);
-        defaultFincaShouldNotBeFound("id.notEquals=" + id);
-
-        defaultFincaShouldBeFound("id.greaterThanOrEqual=" + id);
-        defaultFincaShouldNotBeFound("id.greaterThan=" + id);
-
-        defaultFincaShouldBeFound("id.lessThanOrEqual=" + id);
-        defaultFincaShouldNotBeFound("id.lessThan=" + id);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllFincasByNombreIsEqualToSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where nombre equals to DEFAULT_NOMBRE
-        defaultFincaShouldBeFound("nombre.equals=" + DEFAULT_NOMBRE);
-
-        // Get all the fincaList where nombre equals to UPDATED_NOMBRE
-        defaultFincaShouldNotBeFound("nombre.equals=" + UPDATED_NOMBRE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByNombreIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where nombre not equals to DEFAULT_NOMBRE
-        defaultFincaShouldNotBeFound("nombre.notEquals=" + DEFAULT_NOMBRE);
-
-        // Get all the fincaList where nombre not equals to UPDATED_NOMBRE
-        defaultFincaShouldBeFound("nombre.notEquals=" + UPDATED_NOMBRE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByNombreIsInShouldWork() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where nombre in DEFAULT_NOMBRE or UPDATED_NOMBRE
-        defaultFincaShouldBeFound("nombre.in=" + DEFAULT_NOMBRE + "," + UPDATED_NOMBRE);
-
-        // Get all the fincaList where nombre equals to UPDATED_NOMBRE
-        defaultFincaShouldNotBeFound("nombre.in=" + UPDATED_NOMBRE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByNombreIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where nombre is not null
-        defaultFincaShouldBeFound("nombre.specified=true");
-
-        // Get all the fincaList where nombre is null
-        defaultFincaShouldNotBeFound("nombre.specified=false");
-    }
-                @Test
-    @Transactional
-    public void getAllFincasByNombreContainsSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where nombre contains DEFAULT_NOMBRE
-        defaultFincaShouldBeFound("nombre.contains=" + DEFAULT_NOMBRE);
-
-        // Get all the fincaList where nombre contains UPDATED_NOMBRE
-        defaultFincaShouldNotBeFound("nombre.contains=" + UPDATED_NOMBRE);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByNombreNotContainsSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where nombre does not contain DEFAULT_NOMBRE
-        defaultFincaShouldNotBeFound("nombre.doesNotContain=" + DEFAULT_NOMBRE);
-
-        // Get all the fincaList where nombre does not contain UPDATED_NOMBRE
-        defaultFincaShouldBeFound("nombre.doesNotContain=" + UPDATED_NOMBRE);
-    }
-
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsEqualToSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area equals to DEFAULT_AREA
-        defaultFincaShouldBeFound("area.equals=" + DEFAULT_AREA);
-
-        // Get all the fincaList where area equals to UPDATED_AREA
-        defaultFincaShouldNotBeFound("area.equals=" + UPDATED_AREA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsNotEqualToSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area not equals to DEFAULT_AREA
-        defaultFincaShouldNotBeFound("area.notEquals=" + DEFAULT_AREA);
-
-        // Get all the fincaList where area not equals to UPDATED_AREA
-        defaultFincaShouldBeFound("area.notEquals=" + UPDATED_AREA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsInShouldWork() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area in DEFAULT_AREA or UPDATED_AREA
-        defaultFincaShouldBeFound("area.in=" + DEFAULT_AREA + "," + UPDATED_AREA);
-
-        // Get all the fincaList where area equals to UPDATED_AREA
-        defaultFincaShouldNotBeFound("area.in=" + UPDATED_AREA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsNullOrNotNull() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area is not null
-        defaultFincaShouldBeFound("area.specified=true");
-
-        // Get all the fincaList where area is null
-        defaultFincaShouldNotBeFound("area.specified=false");
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsGreaterThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area is greater than or equal to DEFAULT_AREA
-        defaultFincaShouldBeFound("area.greaterThanOrEqual=" + DEFAULT_AREA);
-
-        // Get all the fincaList where area is greater than or equal to UPDATED_AREA
-        defaultFincaShouldNotBeFound("area.greaterThanOrEqual=" + UPDATED_AREA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsLessThanOrEqualToSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area is less than or equal to DEFAULT_AREA
-        defaultFincaShouldBeFound("area.lessThanOrEqual=" + DEFAULT_AREA);
-
-        // Get all the fincaList where area is less than or equal to SMALLER_AREA
-        defaultFincaShouldNotBeFound("area.lessThanOrEqual=" + SMALLER_AREA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsLessThanSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area is less than DEFAULT_AREA
-        defaultFincaShouldNotBeFound("area.lessThan=" + DEFAULT_AREA);
-
-        // Get all the fincaList where area is less than UPDATED_AREA
-        defaultFincaShouldBeFound("area.lessThan=" + UPDATED_AREA);
-    }
-
-    @Test
-    @Transactional
-    public void getAllFincasByAreaIsGreaterThanSomething() throws Exception {
-        // Initialize the database
-        fincaRepository.saveAndFlush(finca);
-
-        // Get all the fincaList where area is greater than DEFAULT_AREA
-        defaultFincaShouldNotBeFound("area.greaterThan=" + DEFAULT_AREA);
-
-        // Get all the fincaList where area is greater than SMALLER_AREA
-        defaultFincaShouldBeFound("area.greaterThan=" + SMALLER_AREA);
-    }
-
-    /**
-     * Executes the search, and checks that the default entity is returned.
-     */
-    private void defaultFincaShouldBeFound(String filter) throws Exception {
-        restFincaMockMvc.perform(get("/api/fincas?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$.[*].id").value(hasItem(finca.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nombre").value(hasItem(DEFAULT_NOMBRE)))
-            .andExpect(jsonPath("$.[*].area").value(hasItem(DEFAULT_AREA.intValue())));
-
-        // Check, that the count call also returns 1
-        restFincaMockMvc.perform(get("/api/fincas/count?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(content().string("1"));
-    }
-
-    /**
-     * Executes the search, and checks that the default entity is not returned.
-     */
-    private void defaultFincaShouldNotBeFound(String filter) throws Exception {
-        restFincaMockMvc.perform(get("/api/fincas?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$").isEmpty());
-
-        // Check, that the count call also returns 0
-        restFincaMockMvc.perform(get("/api/fincas/count?sort=id,desc&" + filter))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(content().string("0"));
-    }
-
     @Test
     @Transactional
     public void getNonExistingFinca() throws Exception {

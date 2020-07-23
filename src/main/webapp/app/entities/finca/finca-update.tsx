@@ -79,21 +79,20 @@ export const FincaUpdate = (props: IFincaUpdateProps) => {
                 <Label id="nombreLabel" for="finca-nombre">
                   <Translate contentKey="agrofincaApp.finca.nombre">Nombre</Translate>
                 </Label>
-                <AvField id="finca-nombre" type="text" name="nombre" />
+                <AvField
+                  id="finca-nombre"
+                  type="text"
+                  name="nombre"
+                  validate={{
+                    required: { value: true, errorMessage: translate('entity.validation.required') },
+                  }}
+                />
               </AvGroup>
               <AvGroup>
                 <Label id="areaLabel" for="finca-area">
                   <Translate contentKey="agrofincaApp.finca.area">Area</Translate>
                 </Label>
-                <AvField
-                  id="finca-area"
-                  type="text"
-                  name="area"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
-                  }}
-                />
+                <AvField id="finca-area" type="text" name="area" />
               </AvGroup>
               <Button tag={Link} id="cancel-save" to="/finca" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />

@@ -1,0 +1,32 @@
+{
+  "agrofincaApp": {
+    "potreroActividad": {
+      "home": {
+        "title": "Potrero Actividads",
+        "createLabel": "Crear nuevo Potrero Actividad",
+        "createOrEditLabel": "Crear o editar Potrero Actividad",
+        "notFound": "Ningún Potrero Actividads encontrado"
+      },
+      "created": "Un nuevo Potrero Actividad ha sido creado con el identificador {{ param }}",
+      "updated": "Un Potrero Actividad ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Potrero Actividad ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Potrero Actividad {{ id }}?"
+      },
+      "detail": {
+        "title": "Potrero Actividad"
+      },
+      "fechaIngreso": "Fecha Ingreso",
+      "fechaSalida": "Fecha Salida",
+      "cantidadBovinos": "Cantidad Bovinos",
+      "cantidadEquinos": "Cantidad Equinos",
+      "cantidadMulares": "Cantidad Mulares",
+      "fechaLimpia": "Fecha Limpia",
+      "diasDescanso": "Dias Descanso",
+      "diasCarga": "Dias Carga",
+      "ocupado": "Ocupado",
+      "animal": "Animal",
+      "potrero": "Potrero"
+    }
+  }
+}

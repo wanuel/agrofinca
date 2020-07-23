@@ -1,26 +1,37 @@
 {
   "fluentMethods": true,
   "clientRootFolder": "",
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "potrero",
+      "otherEntityRelationshipName": "finca",
+      "relationshipName": "potreros"
+    }
+  ],
   "fields": [
     {
       "fieldName": "nombre",
       "fieldType": "String",
-      "fieldValidateRules": []
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "area",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["required"]
+      "fieldType": "BigDecimal"
     }
   ],
   "changelogDate": "20200629002353",
   "dto": "no",
   "searchEngine": false,
-  "service": "serviceClass",
+  "service": "serviceImpl",
   "entityTableName": "finca",
   "databaseType": "sql",
   "readOnly": false,
-  "jpaMetamodelFiltering": true,
-  "pagination": "pagination"
+  "jpaMetamodelFiltering": false,
+  "pagination": "pagination",
+  "name": "Finca",
+  "embedded": false,
+  "applications": "*"
 }

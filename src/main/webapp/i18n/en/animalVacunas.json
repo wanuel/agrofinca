@@ -1,0 +1,27 @@
+{
+  "agrofincaApp": {
+    "animalVacunas": {
+      "home": {
+        "title": "Animal Vacunas",
+        "createLabel": "Create a new Animal Vacunas",
+        "createOrEditLabel": "Create or edit a Animal Vacunas",
+        "notFound": "No Animal Vacunas found"
+      },
+      "created": "A new Animal Vacunas is created with identifier {{ param }}",
+      "updated": "A Animal Vacunas is updated with identifier {{ param }}",
+      "deleted": "A Animal Vacunas is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Animal Vacunas {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Vacunas"
+      },
+      "fecha": "Fecha",
+      "nombre": "Nombre",
+      "laboratorio": "Laboratorio",
+      "dosis": "Dosis",
+      "animal": "Animal",
+      "tipo": "Tipo"
+    }
+  }
+}

@@ -17,7 +17,8 @@
         "title": "Finca"
       },
       "nombre": "Nombre",
-      "area": "Area"
+      "area": "Area",
+      "potreros": "Potreros"
     }
   }
 }

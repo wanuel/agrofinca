@@ -1,0 +1,131 @@
+entity Finca {
+	nombre String required,
+    area BigDecimal
+}
+entity Potrero {
+	nombre String required, 
+    descripcion String, 
+    pasto String,
+    area BigDecimal
+}
+
+entity PotreroActividad {
+	fechaIngreso LocalDate required,
+    fechaSalida LocalDate,
+	cantidadBovinos Integer required,
+    cantidadEquinos Integer required,
+    cantidadMulares Integer required,
+    fechaLimpia LocalDate,
+    diasDescanso Integer,
+    diasCarga Integer,
+    ocupado SINO required
+}
+
+enum SINO {
+    S, N
+}
+enum GENERO {
+	MACHO, HEMBRA
+}
+
+enum ESTADOANIMAL {
+	VIVO, MUERTO
+}
+
+entity Animal{
+	nombre String,
+    caracterizacion String,
+    hierro SINO, 
+    fechaNacimiento LocalDate,
+    fechaCompra LocalDate,
+    genero GENERO required,
+    castrado SINO required,
+    fechaCastracion LocalDate, 
+    estado ESTADOANIMAL required
+}
+
+entity Parametros{
+	descripcion String required 
+}
+
+entity AnimalCostos {
+	fecha LocalDate required, 
+    valor BigDecimal required
+}
+
+entity AnimalEvento {
+	fecha LocalDate
+}
+
+entity AnimalPeso {
+	fecha LocalDate required,
+    peso BigDecimal required
+}
+
+entity AnimalImagen {
+	fecha LocalDate required,
+    nota String, 
+    imagen Blob required
+}
+
+entity AnimalVacunas {
+	fecha LocalDate required,
+    nombre String required, 
+    laboratorio String, 
+    dosis String required
+}
+
+
+enum TIPODOCUMENTO{
+	CC,TI,CE,NIT
+}
+enum GENERO {
+	H,M
+}
+entity Persona {
+	tipoDocumento TIPODOCUMENTO required,
+    numDocuemnto Long, 
+    primerNombre String required,
+    segundoNombre String,
+    primerApellido String,
+    segundoApellido String,
+    fechaNacimiento LocalDate,
+    genero GENERO
+}
+
+relationship ManyToMany {
+	PotreroActividad{potreroActividad} to Animal{animal}
+}
+
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Finca to Potrero{finca},
+    Potrero to PotreroActividad{potrero},
+    Animal{imagenes} to AnimalImagen{animal},
+    Animal{vacunas} to AnimalVacunas{animal},
+    Animal{pesos} to AnimalPeso{animal},
+    Animal{eventos} to AnimalEvento{animal},
+    Animal{costos} to AnimalCostos{animal},
+    Parametros to AnimalCostos{evento},
+    Parametros to AnimalEvento{evento},
+    Parametros to Animal{tipo},
+    Parametros to Animal{raza},
+    Parametros to AnimalPeso{evento},
+    Parametros to Parametros{padre}
+}
+
+
+// Set pagination options
+paginate Finca, Persona with infinite-scroll
+paginate Potrero, PotreroActividad, AnimalPastoreo with pagination
+paginate AnimalCostos, AnimalEvento, AnimalImagen with pagination
+paginate AnimalPeso, AnimalVacunas, AnimalPeso, Parametros with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+//service all with serviceImpl except Employee, Job
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

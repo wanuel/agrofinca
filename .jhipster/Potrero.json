@@ -1,24 +1,32 @@
 {
   "fluentMethods": true,
   "clientRootFolder": "",
-  "relationships": [],
-  "fields": [
+  "relationships": [
     {
-      "fieldName": "finca",
-      "fieldType": "Integer",
-      "fieldValidateRules": []
+      "relationshipType": "one-to-many",
+      "otherEntityName": "potreroActividad",
+      "otherEntityRelationshipName": "potrero",
+      "relationshipName": "actividades"
     },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "finca",
+      "otherEntityRelationshipName": "potreros",
+      "relationshipName": "finca",
+      "otherEntityField": "id"
+    }
+  ],
+  "fields": [
     {
       "fieldName": "nombre",
       "fieldType": "String",
-      "fieldValidateRules": ["required", "minlength"],
-      "fieldValidateRulesMinlength": "1"
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "descripcion",
-      "fieldType": "String",
-      "fieldValidateRules": ["maxlength"],
-      "fieldValidateRulesMaxlength": "200"
+      "fieldType": "String"
     },
     {
       "fieldName": "pasto",
@@ -26,18 +34,19 @@
     },
     {
       "fieldName": "area",
-      "fieldType": "BigDecimal",
-      "fieldValidateRules": ["required", "min"],
-      "fieldValidateRulesMin": "1"
+      "fieldType": "BigDecimal"
     }
   ],
   "changelogDate": "20200627002924",
   "dto": "no",
   "searchEngine": false,
-  "service": "serviceClass",
+  "service": "serviceImpl",
   "entityTableName": "potrero",
   "databaseType": "sql",
   "readOnly": false,
   "jpaMetamodelFiltering": false,
-  "pagination": "infinite-scroll"
+  "pagination": "pagination",
+  "name": "Potrero",
+  "embedded": false,
+  "applications": "*"
 }

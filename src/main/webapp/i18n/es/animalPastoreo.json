@@ -1,0 +1,21 @@
+{
+  "agrofincaApp": {
+    "animalPastoreo": {
+      "home": {
+        "title": "Animal Pastoreos",
+        "createLabel": "Crear nuevo Animal Pastoreo",
+        "createOrEditLabel": "Crear o editar Animal Pastoreo",
+        "notFound": "Ningún Animal Pastoreos encontrado"
+      },
+      "created": "Un nuevo Animal Pastoreo ha sido creado con el identificador {{ param }}",
+      "updated": "Un Animal Pastoreo ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Animal Pastoreo ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Animal Pastoreo {{ id }}?"
+      },
+      "detail": {
+        "title": "Animal Pastoreo"
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+entity Finca {
+	nombre String required,
+    area BigDecimal
+}
+entity Potrero {
+	nombre String required, 
+    descripcion String, 
+    pasto String,
+    area BigDecimal
+}
+
+enum TIPODOCUMENTO{
+	CC,TI,CE,NIT
+}
+enum GENERO {
+	H,M
+}
+entity Persona {
+	tipoDocumento TIPODOCUMENTO required,
+    numDocuemnto Long, 
+    primerNombre String required,
+    segundoNombre String,
+    primerApellido String,
+    segundoApellido String,
+    fechaNacimiento LocalDate,
+    genero GENERO
+}
+// defining multiple OneToMany relationships with comments
+relationship OneToMany {
+	Finca to Potrero{finca},
+}
+
+
+// Set pagination options
+paginate Finca, Persona with infinite-scroll
+paginate Potrero with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+//service all with serviceImpl except Employee, Job
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

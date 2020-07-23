@@ -1,0 +1,74 @@
+{
+  "name": "Parametros",
+  "fields": [
+    {
+      "fieldName": "descripcion",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalCostos",
+      "otherEntityRelationshipName": "evento",
+      "relationshipName": "costos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalEvento",
+      "otherEntityRelationshipName": "evento",
+      "relationshipName": "eventos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animal",
+      "otherEntityRelationshipName": "tipo",
+      "relationshipName": "animalesTipos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animal",
+      "otherEntityRelationshipName": "raza",
+      "relationshipName": "animalesRazas"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalPeso",
+      "otherEntityRelationshipName": "evento",
+      "relationshipName": "pesos"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalVacunas",
+      "otherEntityRelationshipName": "tipo",
+      "relationshipName": "vacunas"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "padre",
+      "relationshipName": "parametros"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "parametros",
+      "otherEntityRelationshipName": "parametros",
+      "relationshipName": "padre",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20200702011355",
+  "entityTableName": "parametros",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

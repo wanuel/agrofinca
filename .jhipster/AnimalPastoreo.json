@@ -1,0 +1,16 @@
+{
+  "name": "AnimalPastoreo",
+  "fields": [],
+  "relationships": [],
+  "changelogDate": "20200702011255",
+  "entityTableName": "potrero_actividad_animal",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
