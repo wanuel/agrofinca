@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `animal` (
 
 -- Volcando datos para la tabla agrofinca.animal: ~22 rows (aproximadamente)
 /*!40000 ALTER TABLE `animal` DISABLE KEYS */;
-INSERT INTO `animal` (`id`, `tipo`, `raza`, `nombre`, `caracterizacion`, `hierro`, `fecha_nacimiento`, `fecha_compra`, `genero`, `castrado`, `fecha_castracion`, `estado`) VALUES
+INSERT INTO `animal` (`id`, `tipo_id`, `raza_id`, `nombre`, `caracterizacion`, `hierro`, `fecha_nacimiento`, `fecha_compra`, `genero`, `castrado`, `fecha_castracion`, `estado`) VALUES
 	(1, 5, 2, 'TORO BLANCO', NULL, 'N', NULL, NULL, 'MACHO', 'NO', '0000-00-00', 'VIVO'),
 	(2, 5, 2, 'VACA JANNETH', NULL, 'N', NULL, NULL, 'HEMBRA', 'NO', '0000-00-00', 'VIVO'),
 	(3, 5, 2, 'VACA BLANCA', NULL, 'N', NULL, NULL, 'HEMBRA', 'NO', '0000-00-00', 'VIVO'),
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `animal_costos` (
 
 -- Volcando datos para la tabla agrofinca.animal_costos: ~11 rows (aproximadamente)
 /*!40000 ALTER TABLE `animal_costos` DISABLE KEYS */;
-INSERT INTO `animal_costos` (`id`, `animal`, `evento`, `fecha`, `valor`) VALUES
+INSERT INTO `animal_costos` (`id`, `animal_id`, `evento_id`, `fecha`, `valor`) VALUES
 	(1, 38, 19, '2020-06-20', 1700000),
 	(2, 7, 19, '2020-06-01', 1200000),
 	(3, 8, 19, '2020-06-01', 1200000),
