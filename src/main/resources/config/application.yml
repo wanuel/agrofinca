@@ -117,7 +117,7 @@ spring:
         provider:
           oidc:
             #issuer-uri: http://localhost:9080/auth/realms/jhipster
-            issuer-uri: http://localhost:8080/auth/realms/agrofinca
+            issuer-uri: http://wanuel:8080/auth/realms/agrofinca
         registration:
           oidc:
             client-id: login-app
