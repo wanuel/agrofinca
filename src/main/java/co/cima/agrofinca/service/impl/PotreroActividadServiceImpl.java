@@ -1,17 +1,23 @@
 package co.cima.agrofinca.service.impl;
 
-import co.cima.agrofinca.service.PotreroActividadService;
-import co.cima.agrofinca.domain.PotreroActividad;
-import co.cima.agrofinca.repository.PotreroActividadRepository;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import co.cima.agrofinca.domain.PotreroActividad;
+import co.cima.agrofinca.domain.enumeration.SINO;
+import co.cima.agrofinca.repository.PotreroActividadRepository;
+import co.cima.agrofinca.service.PotreroActividadService;
 
 /**
  * Service Implementation for managing {@link PotreroActividad}.
@@ -50,7 +56,20 @@ public class PotreroActividadServiceImpl implements PotreroActividadService {
     @Transactional(readOnly = true)
     public Page<PotreroActividad> findAll(Pageable pageable) {
         log.debug("Request to get all PotreroActividads");
-        return potreroActividadRepository.findAll(pageable);
+        Page<PotreroActividad> ppa =  potreroActividadRepository.findAll(pageable);
+        List<PotreroActividad> list = new ArrayList<PotreroActividad>();
+        for (PotreroActividad potreroActividad : ppa) {
+			if(potreroActividad.getOcupado().equals(SINO.NO)) {
+				if(null!=potreroActividad.getFechaLimpia()) {
+					potreroActividad.setDiasDescanso(
+							Math.toIntExact(potreroActividad.getFechaLimpia().until(LocalDate.now(), ChronoUnit.DAYS)));
+				}
+				list.add(potreroActividad);
+			}
+		}
+        PageImpl<PotreroActividad> page = new PageImpl<PotreroActividad>(list);
+        return page;
+        //return potreroActividadRepository.findAll(pageable);
     }
 
 

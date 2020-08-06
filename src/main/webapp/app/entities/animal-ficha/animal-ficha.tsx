@@ -20,6 +20,7 @@ import { AnimalDetail } from '../animal/animal-detail';
 
 
 export interface IAnimalProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> { }
+export interface IAnimalDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const AnimalFicha = (props: IAnimalProps) => {
 	const [paginationState, setPaginationState] = useState(
@@ -88,7 +89,7 @@ export const AnimalFicha = (props: IAnimalProps) => {
 						<Tab><Translate contentKey="agrofincaApp.animal.ficha.imagenes">Imagenes</Translate></Tab>
 					</TabList>
 					<TabPanel>
-						 
+						
 					</TabPanel>
 					<TabPanel>
 						<h2>Vacunas</h2>

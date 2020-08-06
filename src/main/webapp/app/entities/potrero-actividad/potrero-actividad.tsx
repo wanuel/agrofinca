@@ -163,9 +163,6 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${potreroActividad.id}`} color="info" size="sm">
                         <FontAwesomeIcon icon="eye" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.view">View</Translate>
-                        </span>
                       </Button>
                       <Button
                         tag={Link}
@@ -174,9 +171,6 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
                         size="sm"
                       >
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
                       </Button>
                       <Button
                         tag={Link}
@@ -185,9 +179,6 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
                         size="sm"
                       >
                         <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </span>
                       </Button>
                     </div>
                   </td>
