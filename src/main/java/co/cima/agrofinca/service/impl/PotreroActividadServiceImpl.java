@@ -26,83 +26,82 @@ import co.cima.agrofinca.service.PotreroActividadService;
 @Transactional
 public class PotreroActividadServiceImpl implements PotreroActividadService {
 
-    private final Logger log = LoggerFactory.getLogger(PotreroActividadServiceImpl.class);
+	private final Logger log = LoggerFactory.getLogger(PotreroActividadServiceImpl.class);
 
-    private final PotreroActividadRepository potreroActividadRepository;
+	private final PotreroActividadRepository potreroActividadRepository;
 
-    public PotreroActividadServiceImpl(PotreroActividadRepository potreroActividadRepository) {
-        this.potreroActividadRepository = potreroActividadRepository;
-    }
+	public PotreroActividadServiceImpl(PotreroActividadRepository potreroActividadRepository) {
+		this.potreroActividadRepository = potreroActividadRepository;
+	}
 
-    /**
-     * Save a potreroActividad.
-     *
-     * @param potreroActividad the entity to save.
-     * @return the persisted entity.
-     */
-    @Override
-    public PotreroActividad save(PotreroActividad potreroActividad) {
-        log.debug("Request to save PotreroActividad : {}", potreroActividad);
-        return potreroActividadRepository.save(potreroActividad);
-    }
+	/**
+	 * Save a potreroActividad.
+	 *
+	 * @param potreroActividad the entity to save.
+	 * @return the persisted entity.
+	 */
+	@Override
+	public PotreroActividad save(PotreroActividad potreroActividad) {
+		log.debug("Request to save PotreroActividad : {}", potreroActividad);
+		return potreroActividadRepository.save(potreroActividad);
+	}
 
-    /**
-     * Get all the potreroActividads.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<PotreroActividad> findAll(Pageable pageable) {
-        log.debug("Request to get all PotreroActividads");
-        Page<PotreroActividad> ppa =  potreroActividadRepository.findAll(pageable);
-        List<PotreroActividad> list = new ArrayList<PotreroActividad>();
-        for (PotreroActividad potreroActividad : ppa) {
-			if(potreroActividad.getOcupado().equals(SINO.NO)) {
-				if(null!=potreroActividad.getFechaLimpia()) {
+	/**
+	 * Get all the potreroActividads.
+	 *
+	 * @param pageable the pagination information.
+	 * @return the list of entities.
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Page<PotreroActividad> findAll(Pageable pageable) {
+		log.debug("Request to get all PotreroActividads");
+		Page<PotreroActividad> ppa = potreroActividadRepository.findAll(pageable);
+		List<PotreroActividad> list = new ArrayList<PotreroActividad>();
+		for (PotreroActividad potreroActividad : ppa) {
+			if (potreroActividad.getOcupado().equals(SINO.NO)) {
+				if (null != potreroActividad.getFechaLimpia()) {
 					potreroActividad.setDiasDescanso(
 							Math.toIntExact(potreroActividad.getFechaLimpia().until(LocalDate.now(), ChronoUnit.DAYS)));
 				}
-				list.add(potreroActividad);
 			}
+			list.add(potreroActividad);
 		}
-        PageImpl<PotreroActividad> page = new PageImpl<PotreroActividad>(list);
-        return page;
-        //return potreroActividadRepository.findAll(pageable);
-    }
+		PageImpl<PotreroActividad> page = new PageImpl<PotreroActividad>(list);
+		return page;
+		// return potreroActividadRepository.findAll(pageable);
+	}
 
+	/**
+	 * Get all the potreroActividads with eager load of many-to-many relationships.
+	 *
+	 * @return the list of entities.
+	 */
+	public Page<PotreroActividad> findAllWithEagerRelationships(Pageable pageable) {
+		return potreroActividadRepository.findAllWithEagerRelationships(pageable);
+	}
 
-    /**
-     * Get all the potreroActividads with eager load of many-to-many relationships.
-     *
-     * @return the list of entities.
-     */
-    public Page<PotreroActividad> findAllWithEagerRelationships(Pageable pageable) {
-        return potreroActividadRepository.findAllWithEagerRelationships(pageable);
-    }
+	/**
+	 * Get one potreroActividad by id.
+	 *
+	 * @param id the id of the entity.
+	 * @return the entity.
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public Optional<PotreroActividad> findOne(Long id) {
+		log.debug("Request to get PotreroActividad : {}", id);
+		return potreroActividadRepository.findOneWithEagerRelationships(id);
+	}
 
-    /**
-     * Get one potreroActividad by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<PotreroActividad> findOne(Long id) {
-        log.debug("Request to get PotreroActividad : {}", id);
-        return potreroActividadRepository.findOneWithEagerRelationships(id);
-    }
-
-    /**
-     * Delete the potreroActividad by id.
-     *
-     * @param id the id of the entity.
-     */
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete PotreroActividad : {}", id);
-        potreroActividadRepository.deleteById(id);
-    }
+	/**
+	 * Delete the potreroActividad by id.
+	 *
+	 * @param id the id of the entity.
+	 */
+	@Override
+	public void delete(Long id) {
+		log.debug("Request to delete PotreroActividad : {}", id);
+		potreroActividadRepository.deleteById(id);
+	}
 }
