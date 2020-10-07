@@ -86,15 +86,15 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
 								<th>
 									<Translate contentKey="agrofincaApp.potreroActividad.potrero">Potrero</Translate> <FontAwesomeIcon icon="sort" />
 								</th>
-								<th className="hand" onClick={sort('fechaLimpia')}>
-									<Translate contentKey="agrofincaApp.potreroActividad.fechaLimpia">Fecha Limpia</Translate> <FontAwesomeIcon icon="sort" />
-								</th>
 								<th className="hand" onClick={sort('fechaIngreso')}>
 									<Translate contentKey="agrofincaApp.potreroActividad.fechaIngreso">Fecha Ingreso</Translate>{' '}
 									<FontAwesomeIcon icon="sort" />
 								</th>
 								<th className="hand" onClick={sort('fechaSalida')}>
 									<Translate contentKey="agrofincaApp.potreroActividad.fechaSalida">Fecha Salida</Translate> <FontAwesomeIcon icon="sort" />
+								</th>
+								<th className="hand" onClick={sort('fechaLimpia')}>
+									<Translate contentKey="agrofincaApp.potreroActividad.fechaLimpia">Fecha Limpia</Translate> <FontAwesomeIcon icon="sort" />
 								</th>
 								<th className="hand" onClick={sort('cantidadBovinos')}>
 									<Translate contentKey="agrofincaApp.potreroActividad.cantidadBovinos">Cantidad de Animales</Translate>{' '}
@@ -144,7 +144,7 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
 											<TextFormat type="date" value={potreroActividad.fechaLimpia} format={APP_LOCAL_DATE_FORMAT} />
 										) : null}
 									</td>
-									<td>{potreroActividad.cantidadBovinos}+{potreroActividad.cantidadEquinos}+{potreroActividad.cantidadMulares}</td>
+									<td>{potreroActividad.cantidadBovinos+potreroActividad.cantidadEquinos+potreroActividad.cantidadMulares}={potreroActividad.cantidadBovinos}+{potreroActividad.cantidadEquinos}+{potreroActividad.cantidadMulares}</td>
 									
 									<td>{potreroActividad.diasDescanso}</td>
 									<td>{potreroActividad.diasCarga}</td>
