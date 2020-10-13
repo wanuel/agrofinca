@@ -14,7 +14,7 @@ export interface IPotreroActividad {
   diasDescanso?: number;
   diasCarga?: number;
   ocupado?: SINO;
-  animals?: IAnimal[];
+  animales?: IAnimal[];
   potrero?: IPotrero;
 }
 

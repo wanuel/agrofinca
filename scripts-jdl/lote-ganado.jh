@@ -1,0 +1,27 @@
+enum TipoLoteEnum {
+	COMPRA,VENTA,PASTOREO
+}
+entity Lote {
+	nombre String required
+	tipo TipoLoteEnum required
+    fecha LocalDate required
+    numero_animales Integer required 
+}
+
+entity AnimalLote {
+	fechaEntrada LocalDate required
+	fechaSalida	LocalDate
+}
+
+entity Annimal {
+	nombre String required
+}
+
+relationship OneToMany {
+	Annimal{lotes} to AnimalLote{animal}
+	Lote{animales} to AnimalLote{lote}
+}
+
+paginate all with pagination
+
+service all  with serviceImpl

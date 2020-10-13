@@ -193,7 +193,7 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
                   multiple
                   className="form-control"
                   name="animals"
-                  value={potreroActividadEntity.animals && potreroActividadEntity.animals.map(e => e.id)}
+                  value={potreroActividadEntity.animales && potreroActividadEntity.animales.map(e => e.id)}
                 >
                   <option value="" key="0" />
                   {animals

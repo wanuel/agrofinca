@@ -2,7 +2,7 @@
   "agrofincaApp": {
     "potreroActividad": {
       "home": {
-        "title": "Potrero Actividads",
+        "title": "Potrero Actividad",
         "createLabel": "Crear nuevo Potrero Actividad",
         "createOrEditLabel": "Crear o editar Potrero Actividad",
         "notFound": "Ningún Potrero Actividads encontrado"
@@ -18,6 +18,7 @@
       },
       "fechaIngreso": "Fecha Ingreso",
       "fechaSalida": "Fecha Salida",
+      "cantidadAnimales": "Cantidad Animales",
       "cantidadBovinos": "Cantidad Bovinos",
       "cantidadEquinos": "Cantidad Equinos",
       "cantidadMulares": "Cantidad Mulares",

@@ -96,11 +96,11 @@ export const PotreroActividadDetail = (props: IPotreroActividadDetailProps) => {
             <Translate contentKey="agrofincaApp.potreroActividad.animal">Animal</Translate>
           </dt>
           <dd>
-            {potreroActividadEntity.animals
-              ? potreroActividadEntity.animals.map((val, i) => (
+            {potreroActividadEntity.animales
+              ? potreroActividadEntity.animales.map((val, i) => (
                   <span key={val.id}>
                     <a>{val.nombre}</a>
-                    {potreroActividadEntity.animals && i === potreroActividadEntity.animals.length - 1 ? '' : ', '}
+                    {potreroActividadEntity.animales && i === potreroActividadEntity.animales.length - 1 ? '' : ', '}
                   </span>
                 ))
               : null}

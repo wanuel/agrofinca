@@ -56,20 +56,7 @@ public class PotreroActividadServiceImpl implements PotreroActividadService {
 	@Transactional(readOnly = true)
 	public Page<PotreroActividad> findAll(Pageable pageable) {
 		log.debug("Request to get all PotreroActividads");
-		Page<PotreroActividad> ppa = potreroActividadRepository.findAll(pageable);
-		List<PotreroActividad> list = new ArrayList<PotreroActividad>();
-		for (PotreroActividad potreroActividad : ppa) {
-			if (potreroActividad.getOcupado().equals(SINO.NO)) {
-				if (null != potreroActividad.getFechaLimpia()) {
-					potreroActividad.setDiasDescanso(
-							Math.toIntExact(potreroActividad.getFechaLimpia().until(LocalDate.now(), ChronoUnit.DAYS)));
-				}
-			}
-			list.add(potreroActividad);
-		}
-		PageImpl<PotreroActividad> page = new PageImpl<PotreroActividad>(list);
-		return page;
-		// return potreroActividadRepository.findAll(pageable);
+		return potreroActividadRepository.findAll(pageable);
 	}
 
 	/**

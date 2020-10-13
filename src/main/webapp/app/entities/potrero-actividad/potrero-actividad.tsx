@@ -68,7 +68,7 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
 	return (
 		<div>
 			<h2 id="potrero-actividad-heading">
-				<Translate contentKey="agrofincaApp.potreroActividad.home.title">Potrero Actividads</Translate>
+				<Translate contentKey="agrofincaApp.potreroActividad.home.title">Potrero Actividad</Translate>
 				<Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
 					<FontAwesomeIcon icon="plus" />
           &nbsp;
@@ -83,8 +83,9 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
 								<th className="hand" onClick={sort('id')}>
 									<Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
 								</th>
-								<th>
-									<Translate contentKey="agrofincaApp.potreroActividad.potrero">Potrero</Translate> <FontAwesomeIcon icon="sort" />
+								<th className="hand" onClick={sort('potrero_id')}>
+									<Translate contentKey="agrofincaApp.potreroActividad.potrero">Potrero</Translate> 
+									<FontAwesomeIcon icon="sort" />
 								</th>
 								<th className="hand" onClick={sort('fechaIngreso')}>
 									<Translate contentKey="agrofincaApp.potreroActividad.fechaIngreso">Fecha Ingreso</Translate>{' '}
@@ -96,21 +97,16 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
 								<th className="hand" onClick={sort('fechaLimpia')}>
 									<Translate contentKey="agrofincaApp.potreroActividad.fechaLimpia">Fecha Limpia</Translate> <FontAwesomeIcon icon="sort" />
 								</th>
-								<th className="hand" onClick={sort('cantidadBovinos')}>
-									<Translate contentKey="agrofincaApp.potreroActividad.cantidadBovinos">Cantidad de Animales</Translate>{' '}
-									<FontAwesomeIcon icon="sort" />
+								<th className="hand" >
+									<Translate contentKey="agrofincaApp.potreroActividad.cantidadAnimales">Cantidad de Animales</Translate>{' '}
 								</th>
-								<th className="hand" onClick={sort('diasDescanso')}>
+								<th className="hand">
 									<Translate contentKey="agrofincaApp.potreroActividad.diasDescanso">Dias Descanso</Translate>{' '}
-									<FontAwesomeIcon icon="sort" />
 								</th>
-								<th className="hand" onClick={sort('diasCarga')}>
-									<Translate contentKey="agrofincaApp.potreroActividad.diasCarga">Dias Carga</Translate> <FontAwesomeIcon icon="sort" />
+								<th className="hand">
+									<Translate contentKey="agrofincaApp.potreroActividad.diasCarga">Dias Carga</Translate> 
 								</th>
-								<th className="hand" onClick={sort('ocupado')}>
-									<Translate contentKey="agrofincaApp.potreroActividad.ocupado">Ocupado</Translate> <FontAwesomeIcon icon="sort" />
-								</th>
-
+								
 								<th />
 							</tr>
 						</thead>
@@ -144,14 +140,11 @@ export const PotreroActividad = (props: IPotreroActividadProps) => {
 											<TextFormat type="date" value={potreroActividad.fechaLimpia} format={APP_LOCAL_DATE_FORMAT} />
 										) : null}
 									</td>
-									<td>{potreroActividad.cantidadBovinos+potreroActividad.cantidadEquinos+potreroActividad.cantidadMulares}={potreroActividad.cantidadBovinos}+{potreroActividad.cantidadEquinos}+{potreroActividad.cantidadMulares}</td>
+									<td align="center">{potreroActividad.cantidadBovinos+potreroActividad.cantidadEquinos+potreroActividad.cantidadMulares}</td>
 									
-									<td>{potreroActividad.diasDescanso}</td>
-									<td>{potreroActividad.diasCarga}</td>
-									<td>
-										<Translate contentKey={`agrofincaApp.SINO.${potreroActividad.ocupado}`} />
-									</td>
-
+									<td align="center">{potreroActividad.diasDescanso}</td>
+									<td align="center">{potreroActividad.diasCarga}</td>
+									
 									<td className="text-right">
 										<div className="btn-group flex-btn-group-container">
 											<Button tag={Link} to={`${match.url}/${potreroActividad.id}`} color="info" size="sm">
