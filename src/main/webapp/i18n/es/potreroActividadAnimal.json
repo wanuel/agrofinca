@@ -2,10 +2,10 @@
   "agrofincaApp": {
     "potreroActividadAnimal": {
       "home": {
-        "title": "Potrero Actividad Animals",
+        "title": "Potrero Actividad animales",
         "createLabel": "Crear nuevo Potrero Actividad Animal",
         "createOrEditLabel": "Crear o editar Potrero Actividad Animal",
-        "notFound": "Ningún Potrero Actividad Animals encontrado"
+        "notFound": "Ningún Potrero Actividad animales encontrado"
       },
       "created": "Un nuevo Potrero Actividad Animal ha sido creado con el identificador {{ param }}",
       "updated": "Un Potrero Actividad Animal ha sido actualizado con el identificador {{ param }}",

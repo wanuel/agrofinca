@@ -124,7 +124,7 @@ export const PotreroActividadAnimal = (props: IPotreroActividadAnimalProps) => {
   return (
     <div>
       <h2 id="potrero-actividad-animal-heading">
-        <Translate contentKey="agrofincaApp.potreroActividadAnimal.home.title">Potrero Actividad Animals</Translate>
+        <Translate contentKey="agrofincaApp.potreroActividadAnimal.home.title">Potrero Actividad animales</Translate>
         <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
           <FontAwesomeIcon icon="plus" />
           &nbsp;
@@ -210,7 +210,7 @@ export const PotreroActividadAnimal = (props: IPotreroActividadAnimalProps) => {
           ) : (
             !loading && (
               <div className="alert alert-warning">
-                <Translate contentKey="agrofincaApp.potreroActividadAnimal.home.notFound">No Potrero Actividad Animals found</Translate>
+                <Translate contentKey="agrofincaApp.potreroActividadAnimal.home.notFound">No Potrero Actividad animales found</Translate>
               </div>
             )
           )}

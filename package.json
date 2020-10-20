@@ -1,7 +1,7 @@
 {
   "name": "agrofinca",
   "version": "0.0.1-SNAPSHOT",
-  "description": "Description for agrofinca",
+  "description": "Gestión integral finca",
   "private": true,
   "license": "UNLICENSED",
   "cacheDirectories": [

@@ -21,7 +21,7 @@ public interface PotreroActividadAnimalService {
     PotreroActividadAnimal save(PotreroActividadAnimal potreroActividadAnimal);
 
     /**
-     * Get all the potreroActividadAnimals.
+     * Get all the potreroActividadanimales.
      *
      * @param pageable the pagination information.
      * @return the list of entities.

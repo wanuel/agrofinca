@@ -37,7 +37,9 @@
         "animalEvento": "Animal Evento",
         "animalPeso": "Animal Peso",
         "animalImagen": "Animal Imagen",
-        "animalVacunas": "Animal Vacunas"
+        "animalVacunas": "Animal Vacunas",
+        "lote": "Lotes",
+        "AnimalLote": "Animales por Lote"
       },
       "contabilidad": {
         "main": "Contabilidad",

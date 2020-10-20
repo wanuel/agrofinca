@@ -68,7 +68,7 @@ export const Animal = (props: IAnimalProps) => {
 	return (
 		<div>
 			<h2 id="animal-heading">
-				<Translate contentKey="agrofincaApp.animal.home.title">Animals</Translate>
+				<Translate contentKey="agrofincaApp.animal.home.title">animales</Translate>
 				<Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
 					<FontAwesomeIcon icon="plus" />
           &nbsp;
@@ -199,7 +199,7 @@ export const Animal = (props: IAnimalProps) => {
 				) : (
 						!loading && (
 							<div className="alert alert-warning">
-								<Translate contentKey="agrofincaApp.animal.home.notFound">No Animals found</Translate>
+								<Translate contentKey="agrofincaApp.animal.home.notFound">No animales found</Translate>
 							</div>
 						)
 					)}

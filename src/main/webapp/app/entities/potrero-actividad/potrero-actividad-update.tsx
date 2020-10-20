@@ -7,23 +7,23 @@ import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
-import { IAnimal } from 'app/shared/model/animal.model';
-import { getEntities as getAnimals } from 'app/entities/animal/animal.reducer';
 import { IPotrero } from 'app/shared/model/potrero.model';
-import { getEntities as getPotreros } from 'app/entities/potrero/potrero.reducer';
+import { getEntitiesAll as getPotreros } from 'app/entities/potrero/potrero.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './potrero-actividad.reducer';
 import { IPotreroActividad } from 'app/shared/model/potrero-actividad.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { ILote } from 'app/shared/model/lote.model';
+import { getEntities as getLotes } from 'app/entities/lote/lote.reducer';
 
 export interface IPotreroActividadUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
-  const [idsanimal, setIdsanimal] = useState([]);
+  const [idslote, setIdslote] = useState([]);
   const [potreroId, setPotreroId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { potreroActividadEntity, animals, potreros, loading, updating } = props;
+  const { potreroActividadEntity, lotes, potreros, loading, updating } = props;
 
   const handleClose = () => {
     props.history.push('/potrero-actividad' + props.location.search);
@@ -36,7 +36,7 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
       props.getEntity(props.match.params.id);
     }
 
-    props.getAnimals();
+    props.getLotes();
     props.getPotreros();
   }, []);
 
@@ -51,7 +51,6 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
       const entity = {
         ...potreroActividadEntity,
         ...values,
-        animals: mapIdList(values.animals),
       };
 
       if (isNew) {
@@ -184,20 +183,13 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
                 </AvInput>
               </AvGroup>
               <AvGroup>
-                <Label for="potrero-actividad-animal">
-                  <Translate contentKey="agrofincaApp.potreroActividad.animal">Animal</Translate>
+                <Label for="potrero-actividad-lote">
+                  <Translate contentKey="agrofincaApp.potreroActividad.lote">Lote</Translate>
                 </Label>
-                <AvInput
-                  id="potrero-actividad-animal"
-                  type="select"
-                  multiple
-                  className="form-control"
-                  name="animals"
-                  value={potreroActividadEntity.animales && potreroActividadEntity.animales.map(e => e.id)}
-                >
+                <AvInput id="potrero-actividad-lote" type="select" className="form-control" name="lote.id">
                   <option value="" key="0" />
-                  {animals
-                    ? animals.map(otherEntity => (
+                  {lotes
+                    ? lotes.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
                           {otherEntity.nombre}
                         </option>
@@ -242,7 +234,7 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  animals: storeState.animal.entities,
+  lotes: storeState.lote.entities,
   potreros: storeState.potrero.entities,
   potreroActividadEntity: storeState.potreroActividad.entity,
   loading: storeState.potreroActividad.loading,
@@ -251,7 +243,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getAnimals,
+  getLotes,
   getPotreros,
   getEntity,
   updateEntity,

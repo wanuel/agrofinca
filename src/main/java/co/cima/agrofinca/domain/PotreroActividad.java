@@ -66,11 +66,15 @@ public class PotreroActividad implements Serializable {
 //    @JoinTable(name = "potrero_actividad_animal",
 //               joinColumns = @JoinColumn(name = "potrero_actividad_id", referencedColumnName = "id"),
 //               inverseJoinColumns = @JoinColumn(name = "animal_id", referencedColumnName = "id"))
-//    private Set<Animal> animals = new HashSet<>();
+//    private Set<Animal> animales = new HashSet<>();
 
     @ManyToOne
     @JsonIgnoreProperties(value = "actividades", allowSetters = true)
     private Potrero potrero;
+    
+    @ManyToOne
+    @JsonIgnoreProperties( allowSetters = true)
+    private Lote lote;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "potreroActividad")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -226,7 +230,15 @@ public class PotreroActividad implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
-    @Override
+    public Lote getLote() {
+		return lote;
+	}
+
+	public void setLote(Lote lote) {
+		this.lote = lote;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

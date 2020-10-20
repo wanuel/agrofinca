@@ -1,0 +1,23 @@
+{
+  "agrofincaApp": {
+    "annimal": {
+      "home": {
+        "title": "Annimals",
+        "createLabel": "Create a new Annimal",
+        "createOrEditLabel": "Create or edit a Annimal",
+        "notFound": "No Annimals found"
+      },
+      "created": "A new Annimal is created with identifier {{ param }}",
+      "updated": "A Annimal is updated with identifier {{ param }}",
+      "deleted": "A Annimal is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Annimal {{ id }}?"
+      },
+      "detail": {
+        "title": "Annimal"
+      },
+      "nombre": "Nombre",
+      "lotes": "Lotes"
+    }
+  }
+}

@@ -137,8 +137,8 @@ public class Parametros implements Serializable {
         return animalesTipos;
     }
 
-    public Parametros animalesTipos(Set<Animal> animals) {
-        this.animalesTipos = animals;
+    public Parametros animalesTipos(Set<Animal> animales) {
+        this.animalesTipos = animales;
         return this;
     }
 
@@ -154,16 +154,16 @@ public class Parametros implements Serializable {
         return this;
     }
 
-    public void setAnimalesTipos(Set<Animal> animals) {
-        this.animalesTipos = animals;
+    public void setAnimalesTipos(Set<Animal> animales) {
+        this.animalesTipos = animales;
     }
 
     public Set<Animal> getAnimalesRazas() {
         return animalesRazas;
     }
 
-    public Parametros animalesRazas(Set<Animal> animals) {
-        this.animalesRazas = animals;
+    public Parametros animalesRazas(Set<Animal> animales) {
+        this.animalesRazas = animales;
         return this;
     }
 
@@ -179,8 +179,8 @@ public class Parametros implements Serializable {
         return this;
     }
 
-    public void setAnimalesRazas(Set<Animal> animals) {
-        this.animalesRazas = animals;
+    public void setAnimalesRazas(Set<Animal> animales) {
+        this.animalesRazas = animales;
     }
 
     public Set<AnimalPeso> getPesos() {

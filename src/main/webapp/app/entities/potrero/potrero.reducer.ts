@@ -8,6 +8,7 @@ import { IPotrero, defaultValue } from 'app/shared/model/potrero.model';
 
 export const ACTION_TYPES = {
   FETCH_POTRERO_LIST: 'potrero/FETCH_POTRERO_LIST',
+  FETCH_POTRERO_LIST_ALL: 'potrero/FETCH_POTRERO_LIST_ALL',
   FETCH_POTRERO: 'potrero/FETCH_POTRERO',
   CREATE_POTRERO: 'potrero/CREATE_POTRERO',
   UPDATE_POTRERO: 'potrero/UPDATE_POTRERO',
@@ -32,6 +33,7 @@ export type PotreroState = Readonly<typeof initialState>;
 export default (state: PotreroState = initialState, action): PotreroState => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_POTRERO_LIST):
+    case REQUEST(ACTION_TYPES.FETCH_POTRERO_LIST_ALL):
     case REQUEST(ACTION_TYPES.FETCH_POTRERO):
       return {
         ...state,
@@ -49,6 +51,7 @@ export default (state: PotreroState = initialState, action): PotreroState => {
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_POTRERO_LIST):
+    case FAILURE(ACTION_TYPES.FETCH_POTRERO_LIST_ALL):
     case FAILURE(ACTION_TYPES.FETCH_POTRERO):
     case FAILURE(ACTION_TYPES.CREATE_POTRERO):
     case FAILURE(ACTION_TYPES.UPDATE_POTRERO):
@@ -61,6 +64,13 @@ export default (state: PotreroState = initialState, action): PotreroState => {
         errorMessage: action.payload,
       };
     case SUCCESS(ACTION_TYPES.FETCH_POTRERO_LIST):
+      return {
+        ...state,
+        loading: false,
+        entities: action.payload.data,
+        totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_POTRERO_LIST_ALL):
       return {
         ...state,
         loading: false,
@@ -98,6 +108,7 @@ export default (state: PotreroState = initialState, action): PotreroState => {
 };
 
 const apiUrl = 'api/potreros';
+const apiUrlAll = 'api/potrerosAll';
 
 // Actions
 
@@ -106,6 +117,14 @@ export const getEntities: ICrudGetAllAction<IPotrero> = (page, size, sort) => {
   return {
     type: ACTION_TYPES.FETCH_POTRERO_LIST,
     payload: axios.get<IPotrero>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
+  };
+};
+
+export const getEntitiesAll: ICrudGetAllAction<IPotrero> = () => {
+  const requestUrl = `${apiUrlAll}${''}`;
+  return {
+    type: ACTION_TYPES.FETCH_POTRERO_LIST_ALL,
+    payload: axios.get<IPotrero>(`${requestUrl}${'?'}cacheBuster=${new Date().getTime()}`),
   };
 };
 

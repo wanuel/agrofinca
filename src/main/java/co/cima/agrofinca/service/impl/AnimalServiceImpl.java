@@ -1,17 +1,19 @@
 package co.cima.agrofinca.service.impl;
 
-import co.cima.agrofinca.service.AnimalService;
-import co.cima.agrofinca.domain.Animal;
-import co.cima.agrofinca.repository.AnimalRepository;
+import java.util.List;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import co.cima.agrofinca.domain.Animal;
+import co.cima.agrofinca.domain.vo.ListVO;
+import co.cima.agrofinca.repository.AnimalRepository;
+import co.cima.agrofinca.service.AnimalService;
 
 /**
  * Service Implementation for managing {@link Animal}.
@@ -41,7 +43,7 @@ public class AnimalServiceImpl implements AnimalService {
     }
 
     /**
-     * Get all the animals.
+     * Get all the animales.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
@@ -49,11 +51,18 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     @Transactional(readOnly = true)
     public Page<Animal> findAll(Pageable pageable) {
-        log.debug("Request to get all Animals");
+        log.debug("Request to get all animales");
         return animalRepository.findAll(pageable);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<ListVO> findListVO() {
+        log.debug("Request to get all animales");
+        return animalRepository.findListVO();
+    }
 
+    
     /**
      * Get one animal by id.
      *

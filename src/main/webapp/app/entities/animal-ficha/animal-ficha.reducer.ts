@@ -97,7 +97,7 @@ export default (state: AnimalFichaState = initialState, action): AnimalFichaStat
   }
 };
 
-const apiUrl = 'api/animals';
+const apiUrl = 'api/animales';
 
 // Actions
 

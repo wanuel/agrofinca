@@ -95,7 +95,7 @@ public class Animal implements Serializable {
     @JsonIgnoreProperties(value = "animalesRazas", allowSetters = true)
     private Parametros raza;
 
-//    @ManyToMany(mappedBy = "animals")
+//    @ManyToMany(mappedBy = "animales")
 //    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 //    @JsonIgnore
 //    private Set<PotreroActividad> potreros = new HashSet<>();
@@ -104,7 +104,10 @@ public class Animal implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<PotreroActividadAnimal> pastoreos = new HashSet<>();
 
-    
+    @OneToMany(mappedBy = "animal")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<AnimalLote> lotes = new HashSet<>();
+        
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -392,6 +395,31 @@ public class Animal implements Serializable {
 	public void setPastoreos(Set<PotreroActividadAnimal> pastoreos) {
 		this.pastoreos = pastoreos;
 	}
+	
+	public Set<AnimalLote> getLotes() {
+        return lotes;
+    }
+
+    public Animal lotes(Set<AnimalLote> animalLotes) {
+        this.lotes = animalLotes;
+        return this;
+    }
+
+    public Animal addLotes(AnimalLote animalLote) {
+        this.lotes.add(animalLote);
+        animalLote.setAnimal(this);
+        return this;
+    }
+
+    public Animal removeLotes(AnimalLote animalLote) {
+        this.lotes.remove(animalLote);
+        animalLote.setAnimal(null);
+        return this;
+    }
+
+    public void setLotes(Set<AnimalLote> animalLotes) {
+        this.lotes = animalLotes;
+    }
 
 	@Override
     public boolean equals(Object o) {

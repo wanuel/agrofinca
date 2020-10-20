@@ -1,10 +1,12 @@
 package co.cima.agrofinca.service;
 
 import co.cima.agrofinca.domain.Potrero;
+import co.cima.agrofinca.domain.vo.ListVO;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -43,4 +45,8 @@ public interface PotreroService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+	List<Potrero> findAll();
+
+	List<ListVO> findListVO();
 }

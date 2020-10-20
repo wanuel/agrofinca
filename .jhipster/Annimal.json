@@ -1,0 +1,31 @@
+{
+  "name": "Annimal",
+  "fields": [
+    {
+      "fieldName": "nombre",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "animalLote",
+      "otherEntityRelationshipName": "animal",
+      "relationshipName": "lotes"
+    }
+  ],
+  "changelogDate": "20201013215916",
+  "entityTableName": "annimal",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

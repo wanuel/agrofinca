@@ -5,7 +5,7 @@
         "title": "Animal",
         "createLabel": "Crear nuevo Animal",
         "createOrEditLabel": "Crear o editar Animal",
-        "notFound": "Ningún Animals encontrado"
+        "notFound": "Ningún animales encontrado"
       },
       "created": "Un nuevo Animal ha sido creado con el identificador {{ param }}",
       "updated": "Un Animal ha sido actualizado con el identificador {{ param }}",

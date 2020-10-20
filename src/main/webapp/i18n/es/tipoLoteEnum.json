@@ -1,0 +1,10 @@
+{
+  "agrofincaApp": {
+    "TipoLoteEnum": {
+      "null": "",
+      "COMPRA": "COMPRA",
+      "VENTA": "VENTA",
+      "PASTOREO": "PASTOREO"
+    }
+  }
+}

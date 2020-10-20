@@ -1,6 +1,7 @@
 package co.cima.agrofinca.web.rest;
 
 import co.cima.agrofinca.domain.Potrero;
+import co.cima.agrofinca.domain.vo.ListVO;
 import co.cima.agrofinca.service.PotreroService;
 import co.cima.agrofinca.web.rest.errors.BadRequestAlertException;
 
@@ -98,6 +99,20 @@ public class PotreroResource {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    
+    /**
+     * {@code GET  /potreros} : get all the potreros.
+     *
+     * @param pageable the pagination information.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of potreros in body.
+     */
+    @GetMapping("/potrerosAll")
+    public ResponseEntity<List<ListVO>> getTodosPotreros() {
+        log.debug("REST request to get a page of Potreros");
+        return ResponseEntity.ok().body(potreroService.findListVO());
+    }
+
+    
     /**
      * {@code GET  /potreros/:id} : get the "id" potrero.
      *

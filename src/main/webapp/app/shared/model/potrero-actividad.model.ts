@@ -1,5 +1,5 @@
 import { Moment } from 'moment';
-import { IAnimal } from 'app/shared/model/animal.model';
+import { ILote } from 'app/shared/model/lote.model';
 import { IPotrero } from 'app/shared/model/potrero.model';
 import { SINO } from 'app/shared/model/enumerations/sino.model';
 
@@ -14,7 +14,7 @@ export interface IPotreroActividad {
   diasDescanso?: number;
   diasCarga?: number;
   ocupado?: SINO;
-  animales?: IAnimal[];
+  lote?: ILote;
   potrero?: IPotrero;
 }
 

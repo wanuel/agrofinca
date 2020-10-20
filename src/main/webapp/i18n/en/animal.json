@@ -2,10 +2,10 @@
   "agrofincaApp": {
     "animal": {
       "home": {
-        "title": "Animals",
+        "title": "animales",
         "createLabel": "Create a new Animal",
         "createOrEditLabel": "Create or edit a Animal",
-        "notFound": "No Animals found"
+        "notFound": "No animales found"
       },
       "created": "A new Animal is created with identifier {{ param }}",
       "updated": "A Animal is updated with identifier {{ param }}",

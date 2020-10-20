@@ -1,17 +1,17 @@
 package co.cima.agrofinca.service.impl;
 
-import co.cima.agrofinca.service.PotreroActividadAnimalService;
-import co.cima.agrofinca.domain.PotreroActividadAnimal;
-import co.cima.agrofinca.repository.PotreroActividadAnimalRepository;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import co.cima.agrofinca.domain.PotreroActividadAnimal;
+import co.cima.agrofinca.repository.PotreroActividadAnimalRepository;
+import co.cima.agrofinca.service.PotreroActividadAnimalService;
 
 /**
  * Service Implementation for managing {@link PotreroActividadAnimal}.
@@ -41,7 +41,7 @@ public class PotreroActividadAnimalServiceImpl implements PotreroActividadAnimal
     }
 
     /**
-     * Get all the potreroActividadAnimals.
+     * Get all the potreroActividadanimales.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
@@ -49,7 +49,7 @@ public class PotreroActividadAnimalServiceImpl implements PotreroActividadAnimal
     @Override
     @Transactional(readOnly = true)
     public Page<PotreroActividadAnimal> findAll(Pageable pageable) {
-        log.debug("Request to get all PotreroActividadAnimals");
+        log.debug("Request to get all PotreroActividadanimales");
         return potreroActividadAnimalRepository.findAll(pageable);
     }
 

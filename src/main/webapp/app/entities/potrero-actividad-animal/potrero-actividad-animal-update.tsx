@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
 import { IAnimal } from 'app/shared/model/animal.model';
-import { getEntities as getAnimals } from 'app/entities/animal/animal.reducer';
+import { getEntitiesAll as getanimales } from 'app/entities/animal/animal.reducer';
 import { IPotreroActividad } from 'app/shared/model/potrero-actividad.model';
 import { getEntities as getPotreroActividads } from 'app/entities/potrero-actividad/potrero-actividad.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './potrero-actividad-animal.reducer';
@@ -23,7 +23,7 @@ export const PotreroActividadAnimalUpdate = (props: IPotreroActividadAnimalUpdat
   const [potreroActividad, setPotreroActividadId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { potreroActividadAnimalEntity, animals, potreroActividads, loading, updating } = props;
+  const { potreroActividadAnimalEntity, animales, potreroActividads, loading, updating } = props;
 
   const handleClose = () => {
     props.history.push('/potrero-actividad-animal');
@@ -34,7 +34,7 @@ export const PotreroActividadAnimalUpdate = (props: IPotreroActividadAnimalUpdat
       props.getEntity(props.match.params.id);
     }
 
-    props.getAnimals();
+    props.getanimales();
     props.getPotreroActividads();
   }, []);
 
@@ -90,8 +90,8 @@ export const PotreroActividadAnimalUpdate = (props: IPotreroActividadAnimalUpdat
                 </Label>
                 <AvInput id="potrero-actividad-animal-animal" type="select" className="form-control" name="animal.id">
                   <option value="" key="0" />
-                  {animals
-                    ? animals.map(otherEntity => (
+                  {animales
+                    ? animales.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
                           {otherEntity.nombre}
                         </option>
@@ -141,7 +141,7 @@ export const PotreroActividadAnimalUpdate = (props: IPotreroActividadAnimalUpdat
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  animals: storeState.animal.entities,
+  animales: storeState.animal.entities,
   potreroActividads: storeState.potreroActividad.entities,
   potreroActividadAnimalEntity: storeState.potreroActividadAnimal.entity,
   loading: storeState.potreroActividadAnimal.loading,
@@ -150,7 +150,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getAnimals,
+  getanimales,
   getPotreroActividads,
   getEntity,
   updateEntity,

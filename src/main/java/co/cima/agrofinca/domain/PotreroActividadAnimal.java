@@ -23,7 +23,7 @@ public class PotreroActividadAnimal implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "potreroActividadAnimals", allowSetters = true)
+    @JsonIgnoreProperties(value = "potreroActividadanimales", allowSetters = true)
     private Animal animal;
 
     @ManyToOne

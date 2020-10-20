@@ -30,6 +30,12 @@ const adminMenuItems = (
     <MenuItem icon={faSyringe} to="/animal-vacunas">
       <Translate contentKey="global.menu.animal.animalVacunas" />
     </MenuItem>
+	<MenuItem icon={faSyringe} to="/lote">
+      <Translate contentKey="global.menu.animal.lote" />
+    </MenuItem>
+	<MenuItem icon={faSyringe} to="/animal-lote">
+      <Translate contentKey="global.menu.animal.AnimalLote" />
+    </MenuItem>
   </>
 );
 

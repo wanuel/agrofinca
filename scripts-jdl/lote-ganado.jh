@@ -5,7 +5,7 @@ entity Lote {
 	nombre String required
 	tipo TipoLoteEnum required
     fecha LocalDate required
-    numero_animales Integer required 
+    numeroAnimales Integer required 
 }
 
 entity AnimalLote {

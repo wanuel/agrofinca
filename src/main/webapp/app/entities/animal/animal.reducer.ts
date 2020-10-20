@@ -8,6 +8,7 @@ import { IAnimal, defaultValue } from 'app/shared/model/animal.model';
 
 export const ACTION_TYPES = {
   FETCH_ANIMAL_LIST: 'animal/FETCH_ANIMAL_LIST',
+  FETCH_ANIMAL_LIST_ALL: 'animal/FETCH_ANIMAL_LIST_ALL',
   FETCH_ANIMAL: 'animal/FETCH_ANIMAL',
   CREATE_ANIMAL: 'animal/CREATE_ANIMAL',
   UPDATE_ANIMAL: 'animal/UPDATE_ANIMAL',
@@ -25,13 +26,14 @@ const initialState = {
   updateSuccess: false,
 };
 
-export type AnimalState = Readonly<typeof initialState>;
+export type animalestate = Readonly<typeof initialState>;
 
 // Reducer
 
-export default (state: AnimalState = initialState, action): AnimalState => {
+export default (state: animalestate = initialState, action): animalestate => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_ANIMAL_LIST):
+    case REQUEST(ACTION_TYPES.FETCH_ANIMAL_LIST_ALL):
     case REQUEST(ACTION_TYPES.FETCH_ANIMAL):
       return {
         ...state,
@@ -49,6 +51,7 @@ export default (state: AnimalState = initialState, action): AnimalState => {
         updating: true,
       };
     case FAILURE(ACTION_TYPES.FETCH_ANIMAL_LIST):
+    case FAILURE(ACTION_TYPES.FETCH_ANIMAL_LIST_ALL):
     case FAILURE(ACTION_TYPES.FETCH_ANIMAL):
     case FAILURE(ACTION_TYPES.CREATE_ANIMAL):
     case FAILURE(ACTION_TYPES.UPDATE_ANIMAL):
@@ -61,6 +64,13 @@ export default (state: AnimalState = initialState, action): AnimalState => {
         errorMessage: action.payload,
       };
     case SUCCESS(ACTION_TYPES.FETCH_ANIMAL_LIST):
+      return {
+        ...state,
+        loading: false,
+        entities: action.payload.data,
+        totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+      };
+    case SUCCESS(ACTION_TYPES.FETCH_ANIMAL_LIST_ALL):
       return {
         ...state,
         loading: false,
@@ -97,7 +107,8 @@ export default (state: AnimalState = initialState, action): AnimalState => {
   }
 };
 
-const apiUrl = 'api/animals';
+const apiUrl = 'api/animales';
+const apiUrlAll = 'api/animalesAll';
 
 // Actions
 
@@ -106,6 +117,14 @@ export const getEntities: ICrudGetAllAction<IAnimal> = (page, size, sort) => {
   return {
     type: ACTION_TYPES.FETCH_ANIMAL_LIST,
     payload: axios.get<IAnimal>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
+  };
+};
+
+export const getEntitiesAll: ICrudGetAllAction<IAnimal> = () => {
+  const requestUrlAll = `${apiUrlAll}${''}`;
+  return {
+    type: ACTION_TYPES.FETCH_ANIMAL_LIST_ALL,
+    payload: axios.get<IAnimal>(`${requestUrlAll}${'?'}cacheBuster=${new Date().getTime()}`),
   };
 };
 

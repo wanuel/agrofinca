@@ -33,11 +33,11 @@ const initialState = {
   updateSuccess: false,
 };
 
-export type PotreroActividadAnimalState = Readonly<typeof initialState>;
+export type PotreroActividadanimalestate = Readonly<typeof initialState>;
 
 // Reducer
 
-export default (state: PotreroActividadAnimalState = initialState, action): PotreroActividadAnimalState => {
+export default (state: PotreroActividadanimalestate = initialState, action): PotreroActividadanimalestate => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.FETCH_POTREROACTIVIDADANIMAL_LIST):
     case REQUEST(ACTION_TYPES.FETCH_POTREROACTIVIDADANIMAL):
@@ -109,7 +109,7 @@ export default (state: PotreroActividadAnimalState = initialState, action): Potr
   }
 };
 
-const apiUrl = 'api/potrero-actividad-animals';
+const apiUrl = 'api/potrero-actividad-animales';
 
 // Actions
 

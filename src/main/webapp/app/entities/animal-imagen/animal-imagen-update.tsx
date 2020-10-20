@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
 import { IAnimal } from 'app/shared/model/animal.model';
-import { getEntities as getAnimals } from 'app/entities/animal/animal.reducer';
+import { getEntities as getanimales } from 'app/entities/animal/animal.reducer';
 import { getEntity, updateEntity, createEntity, setBlob, reset } from './animal-imagen.reducer';
 import { IAnimalImagen } from 'app/shared/model/animal-imagen.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -20,7 +20,7 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
   const [animalId, setAnimalId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { animalImagenEntity, animals, loading, updating } = props;
+  const { animalImagenEntity, animales, loading, updating } = props;
 
   const { imagen, imagenContentType } = animalImagenEntity;
 
@@ -35,7 +35,7 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
       props.getEntity(props.match.params.id);
     }
 
-    props.getAnimals();
+    props.getanimales();
   }, []);
 
   const onBlobChange = (isAnImage, name) => event => {
@@ -155,8 +155,8 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
                 </Label>
                 <AvInput id="animal-imagen-animal" type="select" className="form-control" name="animal.id">
                   <option value="" key="0" />
-                  {animals
-                    ? animals.map(otherEntity => (
+                  {animales
+                    ? animales.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
                           {otherEntity.nombre}
                         </option>
@@ -186,7 +186,7 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  animals: storeState.animal.entities,
+  animales: storeState.animal.entities,
   animalImagenEntity: storeState.animalImagen.entity,
   loading: storeState.animalImagen.loading,
   updating: storeState.animalImagen.updating,
@@ -194,7 +194,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getAnimals,
+  getanimales,
   getEntity,
   updateEntity,
   setBlob,

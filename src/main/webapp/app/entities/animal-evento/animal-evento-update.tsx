@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
 import { IAnimal } from 'app/shared/model/animal.model';
-import { getEntities as getAnimals } from 'app/entities/animal/animal.reducer';
+import { getEntities as getanimales } from 'app/entities/animal/animal.reducer';
 import { IParametros } from 'app/shared/model/parametros.model';
 import { getEntities as getParametros } from 'app/entities/parametros/parametros.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './animal-evento.reducer';
@@ -23,7 +23,7 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
   const [eventoId, setEventoId] = useState('0');
   const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { animalEventoEntity, animals, parametros, loading, updating } = props;
+  const { animalEventoEntity, animales, parametros, loading, updating } = props;
 
   const handleClose = () => {
     props.history.push('/animal-evento' + props.location.search);
@@ -36,7 +36,7 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
       props.getEntity(props.match.params.id);
     }
 
-    props.getAnimals();
+    props.getanimales();
     props.getParametros();
   }, []);
 
@@ -96,8 +96,8 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
                 </Label>
                 <AvInput id="animal-evento-animal" type="select" className="form-control" name="animal.id">
                   <option value="" key="0" />
-                  {animals
-                    ? animals.map(otherEntity => (
+                  {animales
+                    ? animales.map(otherEntity => (
                         <option value={otherEntity.id} key={otherEntity.id}>
                           {otherEntity.nombre}
                         </option>
@@ -142,7 +142,7 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
 };
 
 const mapStateToProps = (storeState: IRootState) => ({
-  animals: storeState.animal.entities,
+  animales: storeState.animal.entities,
   parametros: storeState.parametros.entities,
   animalEventoEntity: storeState.animalEvento.entity,
   loading: storeState.animalEvento.loading,
@@ -151,7 +151,7 @@ const mapStateToProps = (storeState: IRootState) => ({
 });
 
 const mapDispatchToProps = {
-  getAnimals,
+  getanimales,
   getParametros,
   getEntity,
   updateEntity,

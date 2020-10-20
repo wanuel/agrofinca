@@ -9,6 +9,7 @@ import { IPotreroActividad } from 'app/shared/model/potrero-actividad.model';
 import { SINO } from 'app/shared/model/enumerations/sino.model';
 import { SEXO } from 'app/shared/model/enumerations/sexo.model';
 import { ESTADOANIMAL } from 'app/shared/model/enumerations/estadoanimal.model';
+import { IAnimalLote } from 'app/shared/model/animal-lote.model';
 
 export interface IAnimal {
   id?: number;
@@ -29,6 +30,7 @@ export interface IAnimal {
   tipo?: IParametros;
   raza?: IParametros;
   potreros?: IPotreroActividad[];
+  lotes?: IAnimalLote[];
 }
 
 export const defaultValue: Readonly<IAnimal> = {};
