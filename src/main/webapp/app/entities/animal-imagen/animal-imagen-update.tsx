@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, setFileData, openFile, byteSize, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm, ValidatedBlobField } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
 import { IAnimal } from 'app/shared/model/animal.model';
-import { getEntities as getanimales } from 'app/entities/animal/animal.reducer';
-import { getEntity, updateEntity, createEntity, setBlob, reset } from './animal-imagen.reducer';
+import { getEntities as getAnimals } from 'app/entities/animal/animal.reducer';
+import { getEntity, updateEntity, createEntity, reset } from './animal-imagen.reducer';
 import { IAnimalImagen } from 'app/shared/model/animal-imagen.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IAnimalImagenUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const AnimalImagenUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
-  const [animalId, setAnimalId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { animalImagenEntity, animales, loading, updating } = props;
-
-  const { imagen, imagenContentType } = animalImagenEntity;
+  const animals = useAppSelector(state => state.animal.entities);
+  const animalImagenEntity = useAppSelector(state => state.animalImagen.entity);
+  const loading = useAppSelector(state => state.animalImagen.loading);
+  const updating = useAppSelector(state => state.animalImagen.updating);
+  const updateSuccess = useAppSelector(state => state.animalImagen.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/animal-imagen' + props.location.search);
@@ -30,49 +29,48 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getanimales();
+    dispatch(getAnimals({}));
   }, []);
 
-  const onBlobChange = (isAnImage, name) => event => {
-    setFileData(event, (contentType, data) => props.setBlob(name, data, contentType), isAnImage);
-  };
-
-  const clearBlob = name => () => {
-    props.setBlob(name, undefined, undefined);
-  };
-
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...animalImagenEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...animalImagenEntity,
+      ...values,
+      animal: animals.find(it => it.id.toString() === values.animalId.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...animalImagenEntity,
+          animalId: animalImagenEntity?.animal?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.animalImagen.home.createOrEditLabel">
-            <Translate contentKey="agrofincaApp.animalImagen.home.createOrEditLabel">Crear o editar una imagen de un Animal</Translate>
+          <h2 id="agrofincaApp.animalImagen.home.createOrEditLabel" data-cy="AnimalImagenCreateUpdateHeading">
+            <Translate contentKey="agrofincaApp.animalImagen.home.createOrEditLabel">Create or edit a AnimalImagen</Translate>
           </h2>
         </Col>
       </Row>
@@ -81,90 +79,61 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : animalImagenEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="animal-imagen-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="animal-imagen-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="fechaLabel" for="animal-imagen-fecha">
-                  <Translate contentKey="agrofincaApp.animalImagen.fecha">Fecha</Translate>
-                </Label>
-                <AvField
-                  id="animal-imagen-fecha"
-                  type="date"
-                  className="form-control"
-                  name="fecha"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                  }}
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="animal-imagen-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
                 />
-              </AvGroup>
-              <AvGroup>
-                <Label id="notaLabel" for="animal-imagen-nota">
-                  <Translate contentKey="agrofincaApp.animalImagen.nota">Nota</Translate>
-                </Label>
-                <AvField id="animal-imagen-nota" type="text" name="nota" />
-              </AvGroup>
-              <AvGroup>
-                <AvGroup>
-                  <Label id="imagenLabel" for="imagen">
-                    <Translate contentKey="agrofincaApp.animalImagen.imagen">Imagen</Translate>
-                  </Label>
-                  <br />
-                  {imagen ? (
-                    <div>
-                      {imagenContentType ? (
-                        <a onClick={openFile(imagenContentType, imagen)}>
-                          <Translate contentKey="entity.action.open">Open</Translate>
-                        </a>
-                      ) : null}
-                      <br />
-                      <Row>
-                        <Col md="11">
-                          <span>
-                            {imagenContentType}, {byteSize(imagen)}
-                          </span>
-                        </Col>
-                        <Col md="1">
-                          <Button color="danger" onClick={clearBlob('imagen')}>
-                            <FontAwesomeIcon icon="times-circle" />
-                          </Button>
-                        </Col>
-                      </Row>
-                    </div>
-                  ) : null}
-                  <input id="file_imagen" type="file" onChange={onBlobChange(false, 'imagen')} />
-                  <AvInput
-                    type="hidden"
-                    name="imagen"
-                    value={imagen}
-                    validate={{
-                      required: { value: true, errorMessage: translate('entity.validation.required') },
-                    }}
-                  />
-                </AvGroup>
-              </AvGroup>
-              <AvGroup>
-                <Label for="animal-imagen-animal">
-                  <Translate contentKey="agrofincaApp.animalImagen.animal">Animal</Translate>
-                </Label>
-                <AvInput id="animal-imagen-animal" type="select" className="form-control" name="animal.id">
-                  <option value="" key="0" />
-                  {animales
-                    ? animales.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.nombre}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/animal-imagen" replace color="info">
+              ) : null}
+              <ValidatedField
+                label={translate('agrofincaApp.animalImagen.fecha')}
+                id="animal-imagen-fecha"
+                name="fecha"
+                data-cy="fecha"
+                type="date"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.animalImagen.nota')}
+                id="animal-imagen-nota"
+                name="nota"
+                data-cy="nota"
+                type="text"
+              />
+              <ValidatedBlobField
+                label={translate('agrofincaApp.animalImagen.imagen')}
+                id="animal-imagen-imagen"
+                name="imagen"
+                data-cy="imagen"
+                openActionLabel={translate('entity.action.open')}
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                id="animal-imagen-animal"
+                name="animalId"
+                data-cy="animal"
+                label={translate('agrofincaApp.animalImagen.animal')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {animals
+                  ? animals.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/animal-imagen" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -172,12 +141,12 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -185,24 +154,4 @@ export const AnimalImagenUpdate = (props: IAnimalImagenUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  animales: storeState.animal.entities,
-  animalImagenEntity: storeState.animalImagen.entity,
-  loading: storeState.animalImagen.loading,
-  updating: storeState.animalImagen.updating,
-  updateSuccess: storeState.animalImagen.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getanimales,
-  getEntity,
-  updateEntity,
-  setBlob,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalImagenUpdate);
+export default AnimalImagenUpdate;

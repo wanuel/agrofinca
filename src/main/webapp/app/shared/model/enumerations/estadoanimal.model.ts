@@ -1,4 +1,4 @@
-export const enum ESTADOANIMAL {
+export enum ESTADOANIMAL {
   VIVO = 'VIVO',
 
   MUERTO = 'MUERTO',

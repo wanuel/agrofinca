@@ -1,4 +1,4 @@
-export const enum TIPODOCUMENTO {
+export enum TIPODOCUMENTO {
   CC = 'CC',
 
   TI = 'TI',

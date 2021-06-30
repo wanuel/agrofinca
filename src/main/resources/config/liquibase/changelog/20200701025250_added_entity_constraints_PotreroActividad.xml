@@ -2,29 +2,28 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <!--
         Added the constraints for entity PotreroActividad.
     -->
     <changeSet id="20200701025250-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="potrero_actividad_id"
-                                 baseTableName="potrero_actividad_animal"
-                                 constraintName="fk_potrero_actividad_animal_potrero_actividad_id"
+                                 baseTableName="rel_potrero_actividad__animal"
+                                 constraintName="fk_rel_potrero_actividad__animal__potrero_actividad_id"
                                  referencedColumnNames="id"
                                  referencedTableName="potrero_actividad"/>
 
         <addForeignKeyConstraint baseColumnNames="animal_id"
-                                 baseTableName="potrero_actividad_animal"
-                                 constraintName="fk_potrero_actividad_animal_animal_id"
+                                 baseTableName="rel_potrero_actividad__animal"
+                                 constraintName="fk_rel_potrero_actividad__animal__animal_id"
                                  referencedColumnNames="id"
                                  referencedTableName="animal"/>
-        
+
         <addForeignKeyConstraint baseColumnNames="potrero_id"
                                  baseTableName="potrero_actividad"
-                                 constraintName="fk_potrero_actividad_potrero_id"
+                                 constraintName="fk_potrero_actividad__potrero_id"
                                  referencedColumnNames="id"
                                  referencedTableName="potrero"/>
-
     </changeSet>
 </databaseChangeLog>

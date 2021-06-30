@@ -3,17 +3,15 @@
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
-        <property name="autoIncrement" value="true"/>
 
     <!--
         Added the entity PotreroActividad.
     -->
     <changeSet id="20200701025250-1" author="jhipster">
         <createTable tableName="potrero_actividad">
-            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="fecha_ingreso" type="date">
@@ -52,7 +50,7 @@
 
     <changeSet id="20200701025250-1-relations" author="jhipster">
 
-        <createTable tableName="potrero_actividad_animal">
+        <createTable tableName="rel_potrero_actividad__animal">
             <column name="animal_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
@@ -61,9 +59,9 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="potrero_actividad_id, animal_id" tableName="potrero_actividad_animal"/>
-        
+        <addPrimaryKey columnNames="potrero_actividad_id, animal_id" tableName="rel_potrero_actividad__animal"/>
     </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
     <!--
@@ -92,5 +90,4 @@
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>
-
 </databaseChangeLog>

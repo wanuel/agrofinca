@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
+import { IAnimal } from 'app/shared/model/animal.model';
+import { getEntities as getAnimals } from 'app/entities/animal/animal.reducer';
 import { IPotrero } from 'app/shared/model/potrero.model';
-import { getEntitiesAll as getPotreros } from 'app/entities/potrero/potrero.reducer';
+import { getEntities as getPotreros } from 'app/entities/potrero/potrero.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './potrero-actividad.reducer';
 import { IPotreroActividad } from 'app/shared/model/potrero-actividad.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
-import { ILote } from 'app/shared/model/lote.model';
-import { getEntities as getLotes } from 'app/entities/lote/lote.reducer';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IPotreroActividadUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PotreroActividadUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
-  const [idslote, setIdslote] = useState([]);
-  const [potreroId, setPotreroId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { potreroActividadEntity, lotes, potreros, loading, updating } = props;
+  const animals = useAppSelector(state => state.animal.entities);
+  const potreros = useAppSelector(state => state.potrero.entities);
+  const potreroActividadEntity = useAppSelector(state => state.potreroActividad.entity);
+  const loading = useAppSelector(state => state.potreroActividad.loading);
+  const updating = useAppSelector(state => state.potreroActividad.updating);
+  const updateSuccess = useAppSelector(state => state.potreroActividad.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/potrero-actividad' + props.location.search);
@@ -31,41 +32,51 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getLotes();
-    props.getPotreros();
+    dispatch(getAnimals({}));
+    dispatch(getPotreros({}));
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...potreroActividadEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...potreroActividadEntity,
+      ...values,
+      animals: mapIdList(values.animals),
+      potrero: potreros.find(it => it.id.toString() === values.potreroId.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...potreroActividadEntity,
+          ocupado: 'S',
+          animals: potreroActividadEntity?.animals?.map(e => e.id.toString()),
+          potreroId: potreroActividadEntity?.potrero?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.potreroActividad.home.createOrEditLabel">
+          <h2 id="agrofincaApp.potreroActividad.home.createOrEditLabel" data-cy="PotreroActividadCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.potreroActividad.home.createOrEditLabel">Create or edit a PotreroActividad</Translate>
           </h2>
         </Col>
@@ -75,144 +86,132 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : potreroActividadEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="potrero-actividad-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="potrero-actividad-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="potrero-actividad-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
+                />
               ) : null}
-              <AvGroup>
-                <Label id="fechaIngresoLabel" for="potrero-actividad-fechaIngreso">
-                  <Translate contentKey="agrofincaApp.potreroActividad.fechaIngreso">Fecha Ingreso</Translate>
-                </Label>
-                <AvField
-                  id="potrero-actividad-fechaIngreso"
-                  type="date"
-                  className="form-control"
-                  name="fechaIngreso"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                  }}
-                />
-              </AvGroup>
-              <AvGroup>
-                <Label id="fechaSalidaLabel" for="potrero-actividad-fechaSalida">
-                  <Translate contentKey="agrofincaApp.potreroActividad.fechaSalida">Fecha Salida</Translate>
-                </Label>
-                <AvField id="potrero-actividad-fechaSalida" type="date" className="form-control" name="fechaSalida" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="cantidadBovinosLabel" for="potrero-actividad-cantidadBovinos">
-                  <Translate contentKey="agrofincaApp.potreroActividad.cantidadBovinos">Cantidad Bovinos</Translate>
-                </Label>
-                <AvField
-                  id="potrero-actividad-cantidadBovinos"
-                  type="string"
-                  className="form-control"
-                  name="cantidadBovinos"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
-                  }}
-                />
-              </AvGroup>
-              <AvGroup>
-                <Label id="cantidadEquinosLabel" for="potrero-actividad-cantidadEquinos">
-                  <Translate contentKey="agrofincaApp.potreroActividad.cantidadEquinos">Cantidad Equinos</Translate>
-                </Label>
-                <AvField
-                  id="potrero-actividad-cantidadEquinos"
-                  type="string"
-                  className="form-control"
-                  name="cantidadEquinos"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
-                  }}
-                />
-              </AvGroup>
-              <AvGroup>
-                <Label id="cantidadMularesLabel" for="potrero-actividad-cantidadMulares">
-                  <Translate contentKey="agrofincaApp.potreroActividad.cantidadMulares">Cantidad Mulares</Translate>
-                </Label>
-                <AvField
-                  id="potrero-actividad-cantidadMulares"
-                  type="string"
-                  className="form-control"
-                  name="cantidadMulares"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                    number: { value: true, errorMessage: translate('entity.validation.number') },
-                  }}
-                />
-              </AvGroup>
-              <AvGroup>
-                <Label id="fechaLimpiaLabel" for="potrero-actividad-fechaLimpia">
-                  <Translate contentKey="agrofincaApp.potreroActividad.fechaLimpia">Fecha Limpia</Translate>
-                </Label>
-                <AvField id="potrero-actividad-fechaLimpia" type="date" className="form-control" name="fechaLimpia" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="diasDescansoLabel" for="potrero-actividad-diasDescanso">
-                  <Translate contentKey="agrofincaApp.potreroActividad.diasDescanso">Dias Descanso</Translate>
-                </Label>
-                <AvField id="potrero-actividad-diasDescanso" type="string" className="form-control" name="diasDescanso" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="diasCargaLabel" for="potrero-actividad-diasCarga">
-                  <Translate contentKey="agrofincaApp.potreroActividad.diasCarga">Dias Carga</Translate>
-                </Label>
-                <AvField id="potrero-actividad-diasCarga" type="string" className="form-control" name="diasCarga" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="ocupadoLabel" for="potrero-actividad-ocupado">
-                  <Translate contentKey="agrofincaApp.potreroActividad.ocupado">Ocupado</Translate>
-                </Label>
-                <AvInput
-                  id="potrero-actividad-ocupado"
-                  type="select"
-                  className="form-control"
-                  name="ocupado"
-                  value={(!isNew && potreroActividadEntity.ocupado) || 'S'}
-                >
-                  <option value="SI">{translate('agrofincaApp.SINO.SI')}</option>
-                  <option value="NO">{translate('agrofincaApp.SINO.NO')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label for="potrero-actividad-lote">
-                  <Translate contentKey="agrofincaApp.potreroActividad.lote">Lote</Translate>
-                </Label>
-                <AvInput id="potrero-actividad-lote" type="select" className="form-control" name="lote.id">
-                  <option value="" key="0" />
-                  {lotes
-                    ? lotes.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.nombre}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label for="potrero-actividad-potrero">
-                  <Translate contentKey="agrofincaApp.potreroActividad.potrero">Potrero</Translate>
-                </Label>
-                <AvInput id="potrero-actividad-potrero" type="select" className="form-control" name="potrero.id">
-                  <option value="" key="0" />
-                  {potreros
-                    ? potreros.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.nombre}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/potrero-actividad" replace color="info">
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.fechaIngreso')}
+                id="potrero-actividad-fechaIngreso"
+                name="fechaIngreso"
+                data-cy="fechaIngreso"
+                type="date"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.fechaSalida')}
+                id="potrero-actividad-fechaSalida"
+                name="fechaSalida"
+                data-cy="fechaSalida"
+                type="date"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.cantidadBovinos')}
+                id="potrero-actividad-cantidadBovinos"
+                name="cantidadBovinos"
+                data-cy="cantidadBovinos"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.cantidadEquinos')}
+                id="potrero-actividad-cantidadEquinos"
+                name="cantidadEquinos"
+                data-cy="cantidadEquinos"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.cantidadMulares')}
+                id="potrero-actividad-cantidadMulares"
+                name="cantidadMulares"
+                data-cy="cantidadMulares"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                  validate: v => isNumber(v) || translate('entity.validation.number'),
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.fechaLimpia')}
+                id="potrero-actividad-fechaLimpia"
+                name="fechaLimpia"
+                data-cy="fechaLimpia"
+                type="date"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.diasDescanso')}
+                id="potrero-actividad-diasDescanso"
+                name="diasDescanso"
+                data-cy="diasDescanso"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.diasCarga')}
+                id="potrero-actividad-diasCarga"
+                name="diasCarga"
+                data-cy="diasCarga"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.ocupado')}
+                id="potrero-actividad-ocupado"
+                name="ocupado"
+                data-cy="ocupado"
+                type="select"
+              >
+                <option value="S">{translate('agrofincaApp.SINO.S')}</option>
+                <option value="N">{translate('agrofincaApp.SINO.N')}</option>
+              </ValidatedField>
+              <ValidatedField
+                label={translate('agrofincaApp.potreroActividad.animal')}
+                id="potrero-actividad-animal"
+                data-cy="animal"
+                type="select"
+                multiple
+                name="animals"
+              >
+                <option value="" key="0" />
+                {animals
+                  ? animals.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField
+                id="potrero-actividad-potrero"
+                name="potreroId"
+                data-cy="potrero"
+                label={translate('agrofincaApp.potreroActividad.potrero')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {potreros
+                  ? potreros.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/potrero-actividad" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -220,12 +219,12 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -233,25 +232,4 @@ export const PotreroActividadUpdate = (props: IPotreroActividadUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  lotes: storeState.lote.entities,
-  potreros: storeState.potrero.entities,
-  potreroActividadEntity: storeState.potreroActividad.entity,
-  loading: storeState.potreroActividad.loading,
-  updating: storeState.potreroActividad.updating,
-  updateSuccess: storeState.potreroActividad.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getLotes,
-  getPotreros,
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PotreroActividadUpdate);
+export default PotreroActividadUpdate;

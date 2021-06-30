@@ -1,0 +1,25 @@
+{
+  "agrofincaApp": {
+    "parametroDominio": {
+      "home": {
+        "title": "Parametro Dominios",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Parametro Dominio",
+        "createOrEditLabel": "Create or edit a Parametro Dominio",
+        "notFound": "No Parametro Dominios found"
+      },
+      "created": "A new Parametro Dominio is created with identifier {{ param }}",
+      "updated": "A Parametro Dominio is updated with identifier {{ param }}",
+      "deleted": "A Parametro Dominio is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Parametro Dominio {{ id }}?"
+      },
+      "detail": {
+        "title": "Parametro Dominio"
+      },
+      "id": "ID",
+      "padoId": "Pado Id",
+      "padoDescripcion": "Pado Descripcion"
+    }
+  }
+}

@@ -2,17 +2,16 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <!--
         Added the constraints for entity Parametros.
     -->
     <changeSet id="20200702011355-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="padre_id"
                                  baseTableName="parametros"
-                                 constraintName="fk_parametros_padre_id"
+                                 constraintName="fk_parametros__padre_id"
                                  referencedColumnNames="id"
                                  referencedTableName="parametros"/>
-
     </changeSet>
 </databaseChangeLog>

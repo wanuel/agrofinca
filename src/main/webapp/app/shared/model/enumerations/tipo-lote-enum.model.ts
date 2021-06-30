@@ -1,4 +1,4 @@
-export const enum TipoLoteEnum {
+export enum TipoLoteEnum {
   COMPRA = 'COMPRA',
 
   VENTA = 'VENTA',

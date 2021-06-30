@@ -3,6 +3,7 @@
     "potrero": {
       "home": {
         "title": "Potreros",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Potrero",
         "createOrEditLabel": "Crear o editar Potrero",
         "notFound": "Ningún Potreros encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Potrero"
       },
+      "id": "ID",
       "nombre": "Nombre",
       "descripcion": "Descripcion",
       "pasto": "Pasto",

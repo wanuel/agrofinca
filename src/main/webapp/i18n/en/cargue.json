@@ -1,0 +1,37 @@
+{
+  "agrofincaApp": {
+    "cargue": {
+      "home": {
+        "title": "Cargues",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Cargue",
+        "createOrEditLabel": "Create or edit a Cargue",
+        "notFound": "No Cargues found"
+      },
+      "created": "A new Cargue is created with identifier {{ param }}",
+      "updated": "A Cargue is updated with identifier {{ param }}",
+      "deleted": "A Cargue is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Cargue {{ id }}?"
+      },
+      "detail": {
+        "title": "Cargue"
+      },
+      "id": "ID",
+      "cargNroRegistros": "Carg Nro Registros",
+      "cargJson": "Carg Json",
+      "cargEntidad": "Carg Entidad",
+      "cargNombreArchivo": "Carg Nombre Archivo",
+      "cargEstado": "Carg Estado",
+      "cargTipo": "Carg Tipo",
+      "cargEsReproceso": "Carg Es Reproceso",
+      "cargHash": "Carg Hash",
+      "usuarioCreacion": "Usuario Creacion",
+      "fechaCreacion": "Fecha Creacion",
+      "usuarioModificacion": "Usuario Modificacion",
+      "fechaModificacion": "Fecha Modificacion",
+      "cargId": "Carg Id",
+      "cargId": "Carg Id"
+    }
+  }
+}

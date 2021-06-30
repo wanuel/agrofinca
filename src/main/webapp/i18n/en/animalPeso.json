@@ -3,6 +3,7 @@
     "animalPeso": {
       "home": {
         "title": "Animal Pesos",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Animal Peso",
         "createOrEditLabel": "Create or edit a Animal Peso",
         "notFound": "No Animal Pesos found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Animal Peso"
       },
+      "id": "ID",
       "fecha": "Fecha",
       "peso": "Peso",
       "animal": "Animal",

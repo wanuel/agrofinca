@@ -11,12 +11,12 @@ import PersonaDeleteDialog from './persona-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={PersonaDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={PersonaUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={PersonaUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={PersonaDetail} />
       <ErrorBoundaryRoute path={match.url} component={Persona} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={PersonaDeleteDialog} />
   </>
 );
 

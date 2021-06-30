@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
 import { IFinca } from 'app/shared/model/finca.model';
 import { getEntities as getFincas } from 'app/entities/finca/finca.reducer';
@@ -13,14 +10,18 @@ import { getEntity, updateEntity, createEntity, reset } from './potrero.reducer'
 import { IPotrero } from 'app/shared/model/potrero.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IPotreroUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PotreroUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PotreroUpdate = (props: IPotreroUpdateProps) => {
-  const [fincaId, setFincaId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { potreroEntity, fincas, loading, updating } = props;
+  const fincas = useAppSelector(state => state.finca.entities);
+  const potreroEntity = useAppSelector(state => state.potrero.entity);
+  const loading = useAppSelector(state => state.potrero.loading);
+  const updating = useAppSelector(state => state.potrero.updating);
+  const updateSuccess = useAppSelector(state => state.potrero.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/potrero' + props.location.search);
@@ -28,40 +29,47 @@ export const PotreroUpdate = (props: IPotreroUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getFincas();
+    dispatch(getFincas({}));
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...potreroEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...potreroEntity,
+      ...values,
+      finca: fincas.find(it => it.id.toString() === values.fincaId.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...potreroEntity,
+          fincaId: potreroEntity?.finca?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.potrero.home.createOrEditLabel">
+          <h2 id="agrofincaApp.potrero.home.createOrEditLabel" data-cy="PotreroCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.potrero.home.createOrEditLabel">Create or edit a Potrero</Translate>
           </h2>
         </Col>
@@ -71,62 +79,53 @@ export const PotreroUpdate = (props: IPotreroUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : potreroEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="potrero-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="potrero-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="nombreLabel" for="potrero-nombre">
-                  <Translate contentKey="agrofincaApp.potrero.nombre">Nombre</Translate>
-                </Label>
-                <AvField
-                  id="potrero-nombre"
-                  type="text"
-                  name="nombre"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                  }}
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="potrero-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
                 />
-              </AvGroup>
-              <AvGroup>
-                <Label id="descripcionLabel" for="potrero-descripcion">
-                  <Translate contentKey="agrofincaApp.potrero.descripcion">Descripcion</Translate>
-                </Label>
-                <AvField id="potrero-descripcion" type="text" name="descripcion" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="pastoLabel" for="potrero-pasto">
-                  <Translate contentKey="agrofincaApp.potrero.pasto">Pasto</Translate>
-                </Label>
-                <AvField id="potrero-pasto" type="text" name="pasto" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="areaLabel" for="potrero-area">
-                  <Translate contentKey="agrofincaApp.potrero.area">Area</Translate>
-                </Label>
-                <AvField id="potrero-area" type="text" name="area" />
-              </AvGroup>
-              <AvGroup>
-                <Label for="potrero-finca">
-                  <Translate contentKey="agrofincaApp.potrero.finca">Finca</Translate>
-                </Label>
-                <AvInput id="potrero-finca" type="select" className="form-control" name="finca.id">
-                  <option value="" key="0" />
-                  {fincas
-                    ? fincas.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.nombre}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/potrero" replace color="info">
+              ) : null}
+              <ValidatedField
+                label={translate('agrofincaApp.potrero.nombre')}
+                id="potrero-nombre"
+                name="nombre"
+                data-cy="nombre"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.potrero.descripcion')}
+                id="potrero-descripcion"
+                name="descripcion"
+                data-cy="descripcion"
+                type="text"
+              />
+              <ValidatedField label={translate('agrofincaApp.potrero.pasto')} id="potrero-pasto" name="pasto" data-cy="pasto" type="text" />
+              <ValidatedField label={translate('agrofincaApp.potrero.area')} id="potrero-area" name="area" data-cy="area" type="text" />
+              <ValidatedField
+                id="potrero-finca"
+                name="fincaId"
+                data-cy="finca"
+                label={translate('agrofincaApp.potrero.finca')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {fincas
+                  ? fincas.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/potrero" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -134,12 +133,12 @@ export const PotreroUpdate = (props: IPotreroUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -147,23 +146,4 @@ export const PotreroUpdate = (props: IPotreroUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  fincas: storeState.finca.entities,
-  potreroEntity: storeState.potrero.entity,
-  loading: storeState.potrero.loading,
-  updating: storeState.potrero.updating,
-  updateSuccess: storeState.potrero.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getFincas,
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PotreroUpdate);
+export default PotreroUpdate;

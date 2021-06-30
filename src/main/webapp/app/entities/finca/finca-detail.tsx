@@ -1,30 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './finca.reducer';
-import { IFinca } from 'app/shared/model/finca.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IFincaDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const FincaDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const FincaDetail = (props: IFincaDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { fincaEntity } = props;
+  const fincaEntity = useAppSelector(state => state.finca.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.finca.detail.title">Finca</Translate> [<b>{fincaEntity.id}</b>]
+        <h2 data-cy="fincaDetailsHeading">
+          <Translate contentKey="agrofincaApp.finca.detail.title">Finca</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{fincaEntity.id}</dd>
           <dt>
             <span id="nombre">
               <Translate contentKey="agrofincaApp.finca.nombre">Nombre</Translate>
@@ -38,7 +42,7 @@ export const FincaDetail = (props: IFincaDetailProps) => {
           </dt>
           <dd>{fincaEntity.area}</dd>
         </dl>
-        <Button tag={Link} to="/finca" replace color="info">
+        <Button tag={Link} to="/finca" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -56,13 +60,4 @@ export const FincaDetail = (props: IFincaDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ finca }: IRootState) => ({
-  fincaEntity: finca.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(FincaDetail);
+export default FincaDetail;

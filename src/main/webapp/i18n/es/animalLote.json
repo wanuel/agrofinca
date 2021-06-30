@@ -3,6 +3,7 @@
     "animalLote": {
       "home": {
         "title": "Animal Lotes",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Animal Lote",
         "createOrEditLabel": "Crear o editar Animal Lote",
         "notFound": "Ningún Animal Lotes encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Animal Lote"
       },
+      "id": "ID",
       "fechaEntrada": "Fecha Entrada",
       "fechaSalida": "Fecha Salida",
       "animal": "Animal",

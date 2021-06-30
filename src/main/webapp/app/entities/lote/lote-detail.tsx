@@ -1,30 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './lote.reducer';
-import { ILote } from 'app/shared/model/lote.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface ILoteDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const LoteDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const LoteDetail = (props: ILoteDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { loteEntity } = props;
+  const loteEntity = useAppSelector(state => state.lote.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.lote.detail.title">Lote</Translate> [<b>{loteEntity.id}</b>]
+        <h2 data-cy="loteDetailsHeading">
+          <Translate contentKey="agrofincaApp.lote.detail.title">Lote</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{loteEntity.id}</dd>
           <dt>
             <span id="nombre">
               <Translate contentKey="agrofincaApp.lote.nombre">Nombre</Translate>
@@ -50,7 +54,7 @@ export const LoteDetail = (props: ILoteDetailProps) => {
           </dt>
           <dd>{loteEntity.numeroAnimales}</dd>
         </dl>
-        <Button tag={Link} to="/lote" replace color="info">
+        <Button tag={Link} to="/lote" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -68,13 +72,4 @@ export const LoteDetail = (props: ILoteDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ lote }: IRootState) => ({
-  loteEntity: lote.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoteDetail);
+export default LoteDetail;

@@ -1,39 +1,39 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IFinca } from 'app/shared/model/finca.model';
-import { IRootState } from 'app/shared/reducers';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity, deleteEntity } from './finca.reducer';
 
-export interface IFincaDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const FincaDeleteDialog = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const FincaDeleteDialog = (props: IFincaDeleteDialogProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
+
+  const fincaEntity = useAppSelector(state => state.finca.entity);
+  const updateSuccess = useAppSelector(state => state.finca.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/finca' + props.location.search);
   };
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.fincaEntity.id);
+    dispatch(deleteEntity(fincaEntity.id));
   };
 
-  const { fincaEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
+      <ModalHeader toggle={handleClose} data-cy="fincaDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="agrofincaApp.finca.delete.question">
@@ -47,7 +47,7 @@ export const FincaDeleteDialog = (props: IFincaDeleteDialogProps) => {
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-finca" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-finca" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -57,14 +57,4 @@ export const FincaDeleteDialog = (props: IFincaDeleteDialogProps) => {
   );
 };
 
-const mapStateToProps = ({ finca }: IRootState) => ({
-  fincaEntity: finca.entity,
-  updateSuccess: finca.updateSuccess,
-});
-
-const mapDispatchToProps = { getEntity, deleteEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(FincaDeleteDialog);
+export default FincaDeleteDialog;

@@ -3,6 +3,7 @@
     "animalPastoreo": {
       "home": {
         "title": "Animal Pastoreos",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Animal Pastoreo",
         "createOrEditLabel": "Crear o editar Animal Pastoreo",
         "notFound": "Ningún Animal Pastoreos encontrado"
@@ -15,7 +16,8 @@
       },
       "detail": {
         "title": "Animal Pastoreo"
-      }
+      },
+      "id": "ID"
     }
   }
 }

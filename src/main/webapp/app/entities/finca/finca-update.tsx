@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
 import { getEntity, updateEntity, createEntity, reset } from './finca.reducer';
 import { IFinca } from 'app/shared/model/finca.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IFincaUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const FincaUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const FincaUpdate = (props: IFincaUpdateProps) => {
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { fincaEntity, loading, updating } = props;
+  const fincaEntity = useAppSelector(state => state.finca.entity);
+  const loading = useAppSelector(state => state.finca.loading);
+  const updating = useAppSelector(state => state.finca.updating);
+  const updateSuccess = useAppSelector(state => state.finca.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/finca' + props.location.search);
@@ -25,38 +26,43 @@ export const FincaUpdate = (props: IFincaUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...fincaEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...fincaEntity,
+      ...values,
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...fincaEntity,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.finca.home.createOrEditLabel">
+          <h2 id="agrofincaApp.finca.home.createOrEditLabel" data-cy="FincaCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.finca.home.createOrEditLabel">Create or edit a Finca</Translate>
           </h2>
         </Col>
@@ -66,35 +72,29 @@ export const FincaUpdate = (props: IFincaUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : fincaEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="finca-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="finca-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="nombreLabel" for="finca-nombre">
-                  <Translate contentKey="agrofincaApp.finca.nombre">Nombre</Translate>
-                </Label>
-                <AvField
-                  id="finca-nombre"
-                  type="text"
-                  name="nombre"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                  }}
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="finca-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
                 />
-              </AvGroup>
-              <AvGroup>
-                <Label id="areaLabel" for="finca-area">
-                  <Translate contentKey="agrofincaApp.finca.area">Area</Translate>
-                </Label>
-                <AvField id="finca-area" type="text" name="area" />
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/finca" replace color="info">
+              ) : null}
+              <ValidatedField
+                label={translate('agrofincaApp.finca.nombre')}
+                id="finca-nombre"
+                name="nombre"
+                data-cy="nombre"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField label={translate('agrofincaApp.finca.area')} id="finca-area" name="area" data-cy="area" type="text" />
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/finca" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -102,12 +102,12 @@ export const FincaUpdate = (props: IFincaUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -115,21 +115,4 @@ export const FincaUpdate = (props: IFincaUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  fincaEntity: storeState.finca.entity,
-  loading: storeState.finca.loading,
-  updating: storeState.finca.updating,
-  updateSuccess: storeState.finca.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(FincaUpdate);
+export default FincaUpdate;

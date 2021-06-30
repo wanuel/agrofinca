@@ -20,6 +20,14 @@
         "animalVacunas": "Animal Vacunas",
         "persona": "Persona",
         "potreroActividadAnimal": "Potrero Actividad Animal",
+        "cargue": "Cargue",
+        "detalleCargue": "Detalle Cargue",
+        "errorCargue": "Error Cargue",
+        "tipoParametro": "Tipo Parametro",
+        "parametroDominio": "Parametro Dominio",
+        "lote": "Lote",
+        "animalLote": "Animal Lote",
+        "annimal": "Annimal",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "finca": {

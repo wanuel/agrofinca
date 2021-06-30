@@ -11,12 +11,12 @@ import AnimalLoteDeleteDialog from './animal-lote-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={AnimalLoteDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={AnimalLoteUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={AnimalLoteUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={AnimalLoteDetail} />
       <ErrorBoundaryRoute path={match.url} component={AnimalLote} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={AnimalLoteDeleteDialog} />
   </>
 );
 

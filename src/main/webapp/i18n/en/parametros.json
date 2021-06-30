@@ -3,6 +3,7 @@
     "parametros": {
       "home": {
         "title": "Parametros",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Parametros",
         "createOrEditLabel": "Create or edit a Parametros",
         "notFound": "No Parametros found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Parametros"
       },
+      "id": "ID",
       "descripcion": "Descripcion",
       "costos": "Costos",
       "eventos": "Eventos",

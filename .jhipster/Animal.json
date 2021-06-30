@@ -26,17 +26,13 @@
       "fieldName": "sexo",
       "fieldType": "SEXO",
       "fieldValues": "MACHO,HEMBRA",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "castrado",
       "fieldType": "SINO",
       "fieldValues": "S,N",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "fechaCastracion",
@@ -46,9 +42,7 @@
       "fieldName": "estado",
       "fieldType": "ESTADOANIMAL",
       "fieldValues": "VIVO,MUERTO",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [

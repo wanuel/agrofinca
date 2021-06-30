@@ -1,0 +1,24 @@
+{
+  "agrofincaApp": {
+    "errorCargue": {
+      "home": {
+        "title": "Error Cargues",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Error Cargue",
+        "createOrEditLabel": "Create or edit a Error Cargue",
+        "notFound": "No Error Cargues found"
+      },
+      "created": "A new Error Cargue is created with identifier {{ param }}",
+      "updated": "A Error Cargue is updated with identifier {{ param }}",
+      "deleted": "A Error Cargue is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Error Cargue {{ id }}?"
+      },
+      "detail": {
+        "title": "Error Cargue"
+      },
+      "id": "ID",
+      "ercaError": "Erca Error"
+    }
+  }
+}

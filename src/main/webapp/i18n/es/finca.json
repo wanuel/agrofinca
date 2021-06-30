@@ -3,6 +3,7 @@
     "finca": {
       "home": {
         "title": "Fincas",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Finca",
         "createOrEditLabel": "Crear o editar Finca",
         "notFound": "Ningún Fincas encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Finca"
       },
+      "id": "ID",
       "nombre": "Nombre",
       "area": "Area",
       "potreros": "Potreros"

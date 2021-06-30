@@ -2,10 +2,11 @@
   "agrofincaApp": {
     "animal": {
       "home": {
-        "title": "Animal",
+        "title": "Animals",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Animal",
         "createOrEditLabel": "Crear o editar Animal",
-        "notFound": "Ningún animales encontrado"
+        "notFound": "Ningún Animals encontrado"
       },
       "created": "Un nuevo Animal ha sido creado con el identificador {{ param }}",
       "updated": "Un Animal ha sido actualizado con el identificador {{ param }}",
@@ -16,15 +17,7 @@
       "detail": {
         "title": "Animal"
       },
-      "ficha": {
-        "title": "Ficha del Animal",
-        "caracteristicas": "Caracteristicas",
-        "vacunas": "Vacunas",
-        "pesos": "Pesos",
-        "pastoreos": "Pastoreos",
-        "eventos": "Eventos",
-        "imagenes": "Imagenes"
-      },
+      "id": "ID",
       "nombre": "Nombre",
       "caracterizacion": "Caracterizacion",
       "hierro": "Hierro",

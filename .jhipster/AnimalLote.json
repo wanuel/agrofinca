@@ -4,9 +4,7 @@
     {
       "fieldName": "fechaEntrada",
       "fieldType": "LocalDate",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "fechaSalida",

@@ -11,12 +11,12 @@ import AnimalVacunasDeleteDialog from './animal-vacunas-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={AnimalVacunasDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={AnimalVacunasUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={AnimalVacunasUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={AnimalVacunasDetail} />
       <ErrorBoundaryRoute path={match.url} component={AnimalVacunas} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={AnimalVacunasDeleteDialog} />
   </>
 );
 

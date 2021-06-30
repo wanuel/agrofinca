@@ -4,9 +4,7 @@
     {
       "fieldName": "nombre",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [

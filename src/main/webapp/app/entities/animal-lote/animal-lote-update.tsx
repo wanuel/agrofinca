@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
-import { IAnimal } from 'app/shared/model/animal.model';
-import { getEntitiesAll as getanimales } from 'app/entities/animal/animal.reducer';
+import { IAnnimal } from 'app/shared/model/annimal.model';
+import { getEntities as getAnnimals } from 'app/entities/annimal/annimal.reducer';
 import { ILote } from 'app/shared/model/lote.model';
 import { getEntities as getLotes } from 'app/entities/lote/lote.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './animal-lote.reducer';
 import { IAnimalLote } from 'app/shared/model/animal-lote.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IAnimalLoteUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const AnimalLoteUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalLoteUpdate = (props: IAnimalLoteUpdateProps) => {
-  const [animalId, setAnimalId] = useState('0');
-  const [loteId, setLoteId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { animalLoteEntity, animales, lotes, loading, updating } = props;
+  const annimals = useAppSelector(state => state.annimal.entities);
+  const lotes = useAppSelector(state => state.lote.entities);
+  const animalLoteEntity = useAppSelector(state => state.animalLote.entity);
+  const loading = useAppSelector(state => state.animalLote.loading);
+  const updating = useAppSelector(state => state.animalLote.updating);
+  const updateSuccess = useAppSelector(state => state.animalLote.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/animal-lote' + props.location.search);
@@ -31,41 +32,50 @@ export const AnimalLoteUpdate = (props: IAnimalLoteUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getanimales(0,1000,'');
-    props.getLotes();
+    dispatch(getAnnimals({}));
+    dispatch(getLotes({}));
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...animalLoteEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...animalLoteEntity,
+      ...values,
+      animal: annimals.find(it => it.id.toString() === values.animalId.toString()),
+      lote: lotes.find(it => it.id.toString() === values.loteId.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...animalLoteEntity,
+          animalId: animalLoteEntity?.animal?.id,
+          loteId: animalLoteEntity?.lote?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.animalLote.home.createOrEditLabel">
+          <h2 id="agrofincaApp.animalLote.home.createOrEditLabel" data-cy="AnimalLoteCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.animalLote.home.createOrEditLabel">Create or edit a AnimalLote</Translate>
           </h2>
         </Col>
@@ -75,66 +85,67 @@ export const AnimalLoteUpdate = (props: IAnimalLoteUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : animalLoteEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="animal-lote-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="animal-lote-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="fechaEntradaLabel" for="animal-lote-fechaEntrada">
-                  <Translate contentKey="agrofincaApp.animalLote.fechaEntrada">Fecha Entrada</Translate>
-                </Label>
-                <AvField
-                  id="animal-lote-fechaEntrada"
-                  type="date"
-                  className="form-control"
-                  name="fechaEntrada"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                  }}
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="animal-lote-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
                 />
-              </AvGroup>
-              <AvGroup>
-                <Label id="fechaSalidaLabel" for="animal-lote-fechaSalida">
-                  <Translate contentKey="agrofincaApp.animalLote.fechaSalida">Fecha Salida</Translate>
-                </Label>
-                <AvField id="animal-lote-fechaSalida" type="date" className="form-control" name="fechaSalida" />
-              </AvGroup>
-              <AvGroup>
-                <Label for="animal-lote-animal">
-                  <Translate contentKey="agrofincaApp.animalLote.animal">Animal</Translate>
-                </Label>
-                <AvInput id="animal-lote-animal" type="select" className="form-control" name="animal.id">
-                  <option value="" key="0" />
-                  {animales
-                    ? animales.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.nombre}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label for="animal-lote-lote">
-                  <Translate contentKey="agrofincaApp.animalLote.lote">Lote</Translate>
-                </Label>
-                <AvInput id="animal-lote-lote" type="select" className="form-control" name="lote.id">
-                  <option value="" key="0" />
-                  {lotes
-                    ? lotes.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.nombre}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/animal-lote" replace color="info">
+              ) : null}
+              <ValidatedField
+                label={translate('agrofincaApp.animalLote.fechaEntrada')}
+                id="animal-lote-fechaEntrada"
+                name="fechaEntrada"
+                data-cy="fechaEntrada"
+                type="date"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.animalLote.fechaSalida')}
+                id="animal-lote-fechaSalida"
+                name="fechaSalida"
+                data-cy="fechaSalida"
+                type="date"
+              />
+              <ValidatedField
+                id="animal-lote-animal"
+                name="animalId"
+                data-cy="animal"
+                label={translate('agrofincaApp.animalLote.animal')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {annimals
+                  ? annimals.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField
+                id="animal-lote-lote"
+                name="loteId"
+                data-cy="lote"
+                label={translate('agrofincaApp.animalLote.lote')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {lotes
+                  ? lotes.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/animal-lote" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -142,12 +153,12 @@ export const AnimalLoteUpdate = (props: IAnimalLoteUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -155,25 +166,4 @@ export const AnimalLoteUpdate = (props: IAnimalLoteUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  animales: storeState.animal.entities,
-  lotes: storeState.lote.entities,
-  animalLoteEntity: storeState.animalLote.entity,
-  loading: storeState.animalLote.loading,
-  updating: storeState.animalLote.updating,
-  updateSuccess: storeState.animalLote.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getanimales,
-  getLotes,
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalLoteUpdate);
+export default AnimalLoteUpdate;

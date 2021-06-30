@@ -1,30 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './animal-costos.reducer';
-import { IAnimalCostos } from 'app/shared/model/animal-costos.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IAnimalCostosDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const AnimalCostosDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalCostosDetail = (props: IAnimalCostosDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { animalCostosEntity } = props;
+  const animalCostosEntity = useAppSelector(state => state.animalCostos.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.animalCostos.detail.title">AnimalCostos</Translate> [<b>{animalCostosEntity.id}</b>]
+        <h2 data-cy="animalCostosDetailsHeading">
+          <Translate contentKey="agrofincaApp.animalCostos.detail.title">AnimalCostos</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{animalCostosEntity.id}</dd>
           <dt>
             <span id="fecha">
               <Translate contentKey="agrofincaApp.animalCostos.fecha">Fecha</Translate>
@@ -42,13 +46,13 @@ export const AnimalCostosDetail = (props: IAnimalCostosDetailProps) => {
           <dt>
             <Translate contentKey="agrofincaApp.animalCostos.animal">Animal</Translate>
           </dt>
-          <dd>{animalCostosEntity.animal ? animalCostosEntity.animal.nombre : ''}</dd>
+          <dd>{animalCostosEntity.animal ? animalCostosEntity.animal.id : ''}</dd>
           <dt>
             <Translate contentKey="agrofincaApp.animalCostos.evento">Evento</Translate>
           </dt>
-          <dd>{animalCostosEntity.evento ? animalCostosEntity.evento.descripcion : ''}</dd>
+          <dd>{animalCostosEntity.evento ? animalCostosEntity.evento.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/animal-costos" replace color="info">
+        <Button tag={Link} to="/animal-costos" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -66,13 +70,4 @@ export const AnimalCostosDetail = (props: IAnimalCostosDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ animalCostos }: IRootState) => ({
-  animalCostosEntity: animalCostos.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalCostosDetail);
+export default AnimalCostosDetail;

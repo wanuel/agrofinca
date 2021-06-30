@@ -2,10 +2,11 @@
   "agrofincaApp": {
     "animal": {
       "home": {
-        "title": "animales",
+        "title": "Animals",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Animal",
         "createOrEditLabel": "Create or edit a Animal",
-        "notFound": "No animales found"
+        "notFound": "No Animals found"
       },
       "created": "A new Animal is created with identifier {{ param }}",
       "updated": "A Animal is updated with identifier {{ param }}",
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Animal"
       },
+      "id": "ID",
       "nombre": "Nombre",
       "caracterizacion": "Caracterizacion",
       "hierro": "Hierro",

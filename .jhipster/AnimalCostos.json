@@ -4,16 +4,12 @@
     {
       "fieldName": "fecha",
       "fieldType": "LocalDate",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "valor",
       "fieldType": "BigDecimal",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [

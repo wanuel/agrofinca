@@ -16,6 +16,48 @@ import animalLote, {
   AnimalLoteState
 } from 'app/entities/animal-lote/animal-lote.reducer';
 // prettier-ignore
+// prettier-ignore
+import cargue from 'app/entities/cargue/cargue.reducer';
+// prettier-ignore
+import detalleCargue from 'app/entities/detalle-cargue/detalle-cargue.reducer';
+// prettier-ignore
+import errorCargue from 'app/entities/error-cargue/error-cargue.reducer';
+// prettier-ignore
+import tipoParametro from 'app/entities/tipo-parametro/tipo-parametro.reducer';
+// prettier-ignore
+import parametroDominio from 'app/entities/parametro-dominio/parametro-dominio.reducer';
+// prettier-ignore
+import potrero from 'app/entities/potrero/potrero.reducer';
+// prettier-ignore
+import finca from 'app/entities/finca/finca.reducer';
+// prettier-ignore
+import potreroActividad from 'app/entities/potrero-actividad/potrero-actividad.reducer';
+// prettier-ignore
+import animal from 'app/entities/animal/animal.reducer';
+// prettier-ignore
+import animalPastoreo from 'app/entities/animal-pastoreo/animal-pastoreo.reducer';
+// prettier-ignore
+import parametros from 'app/entities/parametros/parametros.reducer';
+// prettier-ignore
+import animalCostos from 'app/entities/animal-costos/animal-costos.reducer';
+// prettier-ignore
+import animalEvento from 'app/entities/animal-evento/animal-evento.reducer';
+// prettier-ignore
+import animalPeso from 'app/entities/animal-peso/animal-peso.reducer';
+// prettier-ignore
+import animalImagen from 'app/entities/animal-imagen/animal-imagen.reducer';
+// prettier-ignore
+import animalVacunas from 'app/entities/animal-vacunas/animal-vacunas.reducer';
+// prettier-ignore
+import persona from 'app/entities/persona/persona.reducer';
+// prettier-ignore
+import potreroActividadAnimal from 'app/entities/potrero-actividad-animal/potrero-actividad-animal.reducer';
+// prettier-ignore
+import lote from 'app/entities/lote/lote.reducer';
+// prettier-ignore
+import animalLote from 'app/entities/animal-lote/animal-lote.reducer';
+// prettier-ignore
+import annimal from 'app/entities/annimal/annimal.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 import potrero, { PotreroState } from 'app/entities/potrero/potrero.reducer';
 // prettier-ignore
@@ -70,6 +112,13 @@ const rootReducer = combineReducers<IRootState>({
   userManagement,
   lote,
   animalLote,
+  cargue,
+  detalleCargue,
+  errorCargue,
+  tipoParametro,
+  parametroDominio,
+  animalPastoreo,
+  annimal,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar,
   finca,

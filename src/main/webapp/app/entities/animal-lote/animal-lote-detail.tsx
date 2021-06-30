@@ -1,30 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './animal-lote.reducer';
-import { IAnimalLote } from 'app/shared/model/animal-lote.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IAnimalLoteDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const AnimalLoteDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalLoteDetail = (props: IAnimalLoteDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { animalLoteEntity } = props;
+  const animalLoteEntity = useAppSelector(state => state.animalLote.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.animalLote.detail.title">AnimalLote</Translate> [<b>{animalLoteEntity.id}</b>]
+        <h2 data-cy="animalLoteDetailsHeading">
+          <Translate contentKey="agrofincaApp.animalLote.detail.title">AnimalLote</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{animalLoteEntity.id}</dd>
           <dt>
             <span id="fechaEntrada">
               <Translate contentKey="agrofincaApp.animalLote.fechaEntrada">Fecha Entrada</Translate>
@@ -54,7 +58,7 @@ export const AnimalLoteDetail = (props: IAnimalLoteDetailProps) => {
           </dt>
           <dd>{animalLoteEntity.lote ? animalLoteEntity.lote.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/animal-lote" replace color="info">
+        <Button tag={Link} to="/animal-lote" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -72,13 +76,4 @@ export const AnimalLoteDetail = (props: IAnimalLoteDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ animalLote }: IRootState) => ({
-  animalLoteEntity: animalLote.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalLoteDetail);
+export default AnimalLoteDetail;

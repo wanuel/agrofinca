@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
 import { getEntities as getParametros } from 'app/entities/parametros/parametros.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './parametros.reducer';
 import { IParametros } from 'app/shared/model/parametros.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IParametrosUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const ParametrosUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const ParametrosUpdate = (props: IParametrosUpdateProps) => {
-  const [parametrosId, setParametrosId] = useState('0');
-  const [padreId, setPadreId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { parametrosEntity, parametros, loading, updating } = props;
+  const parametros = useAppSelector(state => state.parametros.entities);
+  const parametrosEntity = useAppSelector(state => state.parametros.entity);
+  const loading = useAppSelector(state => state.parametros.loading);
+  const updating = useAppSelector(state => state.parametros.updating);
+  const updateSuccess = useAppSelector(state => state.parametros.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/parametros' + props.location.search);
@@ -28,40 +28,47 @@ export const ParametrosUpdate = (props: IParametrosUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getParametros();
+    dispatch(getParametros({}));
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...parametrosEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...parametrosEntity,
+      ...values,
+      padre: parametros.find(it => it.id.toString() === values.padreId.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...parametrosEntity,
+          padreId: parametrosEntity?.padre?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.parametros.home.createOrEditLabel">
+          <h2 id="agrofincaApp.parametros.home.createOrEditLabel" data-cy="ParametrosCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.parametros.home.createOrEditLabel">Create or edit a Parametros</Translate>
           </h2>
         </Col>
@@ -71,44 +78,44 @@ export const ParametrosUpdate = (props: IParametrosUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : parametrosEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="parametros-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="parametros-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="descripcionLabel" for="parametros-descripcion">
-                  <Translate contentKey="agrofincaApp.parametros.descripcion">Descripcion</Translate>
-                </Label>
-                <AvField
-                  id="parametros-descripcion"
-                  type="text"
-                  name="descripcion"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                  }}
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="parametros-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
                 />
-              </AvGroup>
-              <AvGroup>
-                <Label for="parametros-padre">
-                  <Translate contentKey="agrofincaApp.parametros.padre">Padre</Translate>
-                </Label>
-                <AvInput id="parametros-padre" type="select" className="form-control" name="padre.id">
-                  <option value="" key="0" />
-                  {parametros
-                    ? parametros.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.descripcion}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/parametros" replace color="info">
+              ) : null}
+              <ValidatedField
+                label={translate('agrofincaApp.parametros.descripcion')}
+                id="parametros-descripcion"
+                name="descripcion"
+                data-cy="descripcion"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                id="parametros-padre"
+                name="padreId"
+                data-cy="padre"
+                label={translate('agrofincaApp.parametros.padre')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {parametros
+                  ? parametros.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/parametros" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -116,12 +123,12 @@ export const ParametrosUpdate = (props: IParametrosUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -129,23 +136,4 @@ export const ParametrosUpdate = (props: IParametrosUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  parametros: storeState.parametros.entities,
-  parametrosEntity: storeState.parametros.entity,
-  loading: storeState.parametros.loading,
-  updating: storeState.parametros.updating,
-  updateSuccess: storeState.parametros.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getParametros,
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(ParametrosUpdate);
+export default ParametrosUpdate;

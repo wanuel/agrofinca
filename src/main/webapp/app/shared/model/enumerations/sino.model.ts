@@ -1,4 +1,4 @@
-export const enum SINO {
+export enum SINO {
   S = 'S',
 
   N = 'N',

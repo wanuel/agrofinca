@@ -1,4 +1,4 @@
-export const enum SEXO {
+export enum SEXO {
   MACHO = 'MACHO',
 
   HEMBRA = 'HEMBRA',

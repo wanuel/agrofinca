@@ -3,6 +3,7 @@
     "animalEvento": {
       "home": {
         "title": "Animal Eventos",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Animal Evento",
         "createOrEditLabel": "Create or edit a Animal Evento",
         "notFound": "No Animal Eventos found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Animal Evento"
       },
+      "id": "ID",
       "fecha": "Fecha",
       "animal": "Animal",
       "evento": "Evento"

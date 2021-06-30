@@ -7,14 +7,14 @@ import { IAnimalVacunas } from 'app/shared/model/animal-vacunas.model';
 export interface IParametros {
   id?: number;
   descripcion?: string;
-  costos?: IAnimalCostos[];
-  eventos?: IAnimalEvento[];
-  animalesTipos?: IAnimal[];
-  animalesRazas?: IAnimal[];
-  pesos?: IAnimalPeso[];
-  vacunas?: IAnimalVacunas[];
-  parametros?: IParametros[];
-  padre?: IParametros;
+  costos?: IAnimalCostos[] | null;
+  eventos?: IAnimalEvento[] | null;
+  animalesTipos?: IAnimal[] | null;
+  animalesRazas?: IAnimal[] | null;
+  pesos?: IAnimalPeso[] | null;
+  vacunas?: IAnimalVacunas[] | null;
+  parametros?: IParametros[] | null;
+  padre?: IParametros | null;
 }
 
 export const defaultValue: Readonly<IParametros> = {};

@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
 import { getEntity, updateEntity, createEntity, reset } from './persona.reducer';
 import { IPersona } from 'app/shared/model/persona.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IPersonaUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PersonaUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PersonaUpdate = (props: IPersonaUpdateProps) => {
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { personaEntity, loading, updating } = props;
+  const personaEntity = useAppSelector(state => state.persona.entity);
+  const loading = useAppSelector(state => state.persona.loading);
+  const updating = useAppSelector(state => state.persona.updating);
+  const updateSuccess = useAppSelector(state => state.persona.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/persona' + props.location.search);
@@ -25,38 +26,45 @@ export const PersonaUpdate = (props: IPersonaUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...personaEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...personaEntity,
+      ...values,
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...personaEntity,
+          tipoDocumento: 'CC',
+          genero: 'MASCULINO',
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.persona.home.createOrEditLabel">
+          <h2 id="agrofincaApp.persona.home.createOrEditLabel" data-cy="PersonaCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.persona.home.createOrEditLabel">Create or edit a Persona</Translate>
           </h2>
         </Col>
@@ -66,91 +74,85 @@ export const PersonaUpdate = (props: IPersonaUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : personaEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="persona-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="persona-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
-              ) : null}
-              <AvGroup>
-                <Label id="tipoDocumentoLabel" for="persona-tipoDocumento">
-                  <Translate contentKey="agrofincaApp.persona.tipoDocumento">Tipo Documento</Translate>
-                </Label>
-                <AvInput
-                  id="persona-tipoDocumento"
-                  type="select"
-                  className="form-control"
-                  name="tipoDocumento"
-                  value={(!isNew && personaEntity.tipoDocumento) || 'CC'}
-                >
-                  <option value="CC">{translate('agrofincaApp.TIPODOCUMENTO.CC')}</option>
-                  <option value="TI">{translate('agrofincaApp.TIPODOCUMENTO.TI')}</option>
-                  <option value="CE">{translate('agrofincaApp.TIPODOCUMENTO.CE')}</option>
-                  <option value="NIT">{translate('agrofincaApp.TIPODOCUMENTO.NIT')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label id="numDocuemntoLabel" for="persona-numDocuemnto">
-                  <Translate contentKey="agrofincaApp.persona.numDocuemnto">Num Docuemnto</Translate>
-                </Label>
-                <AvField id="persona-numDocuemnto" type="string" className="form-control" name="numDocuemnto" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="primerNombreLabel" for="persona-primerNombre">
-                  <Translate contentKey="agrofincaApp.persona.primerNombre">Primer Nombre</Translate>
-                </Label>
-                <AvField
-                  id="persona-primerNombre"
-                  type="text"
-                  name="primerNombre"
-                  validate={{
-                    required: { value: true, errorMessage: translate('entity.validation.required') },
-                  }}
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="persona-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
                 />
-              </AvGroup>
-              <AvGroup>
-                <Label id="segundoNombreLabel" for="persona-segundoNombre">
-                  <Translate contentKey="agrofincaApp.persona.segundoNombre">Segundo Nombre</Translate>
-                </Label>
-                <AvField id="persona-segundoNombre" type="text" name="segundoNombre" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="primerApellidoLabel" for="persona-primerApellido">
-                  <Translate contentKey="agrofincaApp.persona.primerApellido">Primer Apellido</Translate>
-                </Label>
-                <AvField id="persona-primerApellido" type="text" name="primerApellido" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="segundoApellidoLabel" for="persona-segundoApellido">
-                  <Translate contentKey="agrofincaApp.persona.segundoApellido">Segundo Apellido</Translate>
-                </Label>
-                <AvField id="persona-segundoApellido" type="text" name="segundoApellido" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="fechaNacimientoLabel" for="persona-fechaNacimiento">
-                  <Translate contentKey="agrofincaApp.persona.fechaNacimiento">Fecha Nacimiento</Translate>
-                </Label>
-                <AvField id="persona-fechaNacimiento" type="date" className="form-control" name="fechaNacimiento" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="generoLabel" for="persona-genero">
-                  <Translate contentKey="agrofincaApp.persona.genero">Genero</Translate>
-                </Label>
-                <AvInput
-                  id="persona-genero"
-                  type="select"
-                  className="form-control"
-                  name="genero"
-                  value={(!isNew && personaEntity.genero) || 'MASCULINO'}
-                >
-                  <option value="MASCULINO">{translate('agrofincaApp.GENERO.MASCULINO')}</option>
-                  <option value="FEMENINO">{translate('agrofincaApp.GENERO.FEMENINO')}</option>
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/persona" replace color="info">
+              ) : null}
+              <ValidatedField
+                label={translate('agrofincaApp.persona.tipoDocumento')}
+                id="persona-tipoDocumento"
+                name="tipoDocumento"
+                data-cy="tipoDocumento"
+                type="select"
+              >
+                <option value="CC">{translate('agrofincaApp.TIPODOCUMENTO.CC')}</option>
+                <option value="TI">{translate('agrofincaApp.TIPODOCUMENTO.TI')}</option>
+                <option value="CE">{translate('agrofincaApp.TIPODOCUMENTO.CE')}</option>
+                <option value="NIT">{translate('agrofincaApp.TIPODOCUMENTO.NIT')}</option>
+              </ValidatedField>
+              <ValidatedField
+                label={translate('agrofincaApp.persona.numDocuemnto')}
+                id="persona-numDocuemnto"
+                name="numDocuemnto"
+                data-cy="numDocuemnto"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.persona.primerNombre')}
+                id="persona-primerNombre"
+                name="primerNombre"
+                data-cy="primerNombre"
+                type="text"
+                validate={{
+                  required: { value: true, message: translate('entity.validation.required') },
+                }}
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.persona.segundoNombre')}
+                id="persona-segundoNombre"
+                name="segundoNombre"
+                data-cy="segundoNombre"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.persona.primerApellido')}
+                id="persona-primerApellido"
+                name="primerApellido"
+                data-cy="primerApellido"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.persona.segundoApellido')}
+                id="persona-segundoApellido"
+                name="segundoApellido"
+                data-cy="segundoApellido"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.persona.fechaNacimiento')}
+                id="persona-fechaNacimiento"
+                name="fechaNacimiento"
+                data-cy="fechaNacimiento"
+                type="date"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.persona.genero')}
+                id="persona-genero"
+                name="genero"
+                data-cy="genero"
+                type="select"
+              >
+                <option value="MASCULINO">{translate('agrofincaApp.GENERO.MASCULINO')}</option>
+                <option value="FEMENINO">{translate('agrofincaApp.GENERO.FEMENINO')}</option>
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/persona" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -158,12 +160,12 @@ export const PersonaUpdate = (props: IPersonaUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -171,21 +173,4 @@ export const PersonaUpdate = (props: IPersonaUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  personaEntity: storeState.persona.entity,
-  loading: storeState.persona.loading,
-  updating: storeState.persona.updating,
-  updateSuccess: storeState.persona.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PersonaUpdate);
+export default PersonaUpdate;

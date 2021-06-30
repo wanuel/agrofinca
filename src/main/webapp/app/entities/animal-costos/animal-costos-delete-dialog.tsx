@@ -1,39 +1,39 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IAnimalCostos } from 'app/shared/model/animal-costos.model';
-import { IRootState } from 'app/shared/reducers';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity, deleteEntity } from './animal-costos.reducer';
 
-export interface IAnimalCostosDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const AnimalCostosDeleteDialog = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalCostosDeleteDialog = (props: IAnimalCostosDeleteDialogProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
+
+  const animalCostosEntity = useAppSelector(state => state.animalCostos.entity);
+  const updateSuccess = useAppSelector(state => state.animalCostos.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/animal-costos' + props.location.search);
   };
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.animalCostosEntity.id);
+    dispatch(deleteEntity(animalCostosEntity.id));
   };
 
-  const { animalCostosEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
+      <ModalHeader toggle={handleClose} data-cy="animalCostosDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="agrofincaApp.animalCostos.delete.question">
@@ -47,7 +47,7 @@ export const AnimalCostosDeleteDialog = (props: IAnimalCostosDeleteDialogProps) 
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-animalCostos" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-animalCostos" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -57,14 +57,4 @@ export const AnimalCostosDeleteDialog = (props: IAnimalCostosDeleteDialogProps) 
   );
 };
 
-const mapStateToProps = ({ animalCostos }: IRootState) => ({
-  animalCostosEntity: animalCostos.entity,
-  updateSuccess: animalCostos.updateSuccess,
-});
-
-const mapDispatchToProps = { getEntity, deleteEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalCostosDeleteDialog);
+export default AnimalCostosDeleteDialog;

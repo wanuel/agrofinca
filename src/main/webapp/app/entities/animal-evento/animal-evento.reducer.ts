@@ -1,148 +1,123 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-
+import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IAnimalEvento, defaultValue } from 'app/shared/model/animal-evento.model';
 
-export const ACTION_TYPES = {
-  FETCH_ANIMALEVENTO_LIST: 'animalEvento/FETCH_ANIMALEVENTO_LIST',
-  FETCH_ANIMALEVENTO: 'animalEvento/FETCH_ANIMALEVENTO',
-  CREATE_ANIMALEVENTO: 'animalEvento/CREATE_ANIMALEVENTO',
-  UPDATE_ANIMALEVENTO: 'animalEvento/UPDATE_ANIMALEVENTO',
-  DELETE_ANIMALEVENTO: 'animalEvento/DELETE_ANIMALEVENTO',
-  RESET: 'animalEvento/RESET',
-};
-
-const initialState = {
+const initialState: EntityState<IAnimalEvento> = {
   loading: false,
   errorMessage: null,
-  entities: [] as ReadonlyArray<IAnimalEvento>,
+  entities: [],
   entity: defaultValue,
   updating: false,
   totalItems: 0,
   updateSuccess: false,
 };
 
-export type AnimalEventoState = Readonly<typeof initialState>;
-
-// Reducer
-
-export default (state: AnimalEventoState = initialState, action): AnimalEventoState => {
-  switch (action.type) {
-    case REQUEST(ACTION_TYPES.FETCH_ANIMALEVENTO_LIST):
-    case REQUEST(ACTION_TYPES.FETCH_ANIMALEVENTO):
-      return {
-        ...state,
-        errorMessage: null,
-        updateSuccess: false,
-        loading: true,
-      };
-    case REQUEST(ACTION_TYPES.CREATE_ANIMALEVENTO):
-    case REQUEST(ACTION_TYPES.UPDATE_ANIMALEVENTO):
-    case REQUEST(ACTION_TYPES.DELETE_ANIMALEVENTO):
-      return {
-        ...state,
-        errorMessage: null,
-        updateSuccess: false,
-        updating: true,
-      };
-    case FAILURE(ACTION_TYPES.FETCH_ANIMALEVENTO_LIST):
-    case FAILURE(ACTION_TYPES.FETCH_ANIMALEVENTO):
-    case FAILURE(ACTION_TYPES.CREATE_ANIMALEVENTO):
-    case FAILURE(ACTION_TYPES.UPDATE_ANIMALEVENTO):
-    case FAILURE(ACTION_TYPES.DELETE_ANIMALEVENTO):
-      return {
-        ...state,
-        loading: false,
-        updating: false,
-        updateSuccess: false,
-        errorMessage: action.payload,
-      };
-    case SUCCESS(ACTION_TYPES.FETCH_ANIMALEVENTO_LIST):
-      return {
-        ...state,
-        loading: false,
-        entities: action.payload.data,
-        totalItems: parseInt(action.payload.headers['x-total-count'], 10),
-      };
-    case SUCCESS(ACTION_TYPES.FETCH_ANIMALEVENTO):
-      return {
-        ...state,
-        loading: false,
-        entity: action.payload.data,
-      };
-    case SUCCESS(ACTION_TYPES.CREATE_ANIMALEVENTO):
-    case SUCCESS(ACTION_TYPES.UPDATE_ANIMALEVENTO):
-      return {
-        ...state,
-        updating: false,
-        updateSuccess: true,
-        entity: action.payload.data,
-      };
-    case SUCCESS(ACTION_TYPES.DELETE_ANIMALEVENTO):
-      return {
-        ...state,
-        updating: false,
-        updateSuccess: true,
-        entity: {},
-      };
-    case ACTION_TYPES.RESET:
-      return {
-        ...initialState,
-      };
-    default:
-      return state;
-  }
-};
-
 const apiUrl = 'api/animal-eventos';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IAnimalEvento> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
-  return {
-    type: ACTION_TYPES.FETCH_ANIMALEVENTO_LIST,
-    payload: axios.get<IAnimalEvento>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
-  };
-};
-
-export const getEntity: ICrudGetAction<IAnimalEvento> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
-  return {
-    type: ACTION_TYPES.FETCH_ANIMALEVENTO,
-    payload: axios.get<IAnimalEvento>(requestUrl),
-  };
-};
-
-export const createEntity: ICrudPutAction<IAnimalEvento> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.CREATE_ANIMALEVENTO,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
-  });
-  dispatch(getEntities());
-  return result;
-};
-
-export const updateEntity: ICrudPutAction<IAnimalEvento> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.UPDATE_ANIMALEVENTO,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
-  });
-  return result;
-};
-
-export const deleteEntity: ICrudDeleteAction<IAnimalEvento> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
-  const result = await dispatch({
-    type: ACTION_TYPES.DELETE_ANIMALEVENTO,
-    payload: axios.delete(requestUrl),
-  });
-  return result;
-};
-
-export const reset = () => ({
-  type: ACTION_TYPES.RESET,
+export const getEntities = createAsyncThunk('animalEvento/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
+  return axios.get<IAnimalEvento[]>(requestUrl);
 });
+
+export const getEntity = createAsyncThunk(
+  'animalEvento/fetch_entity',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/${id}`;
+    return axios.get<IAnimalEvento>(requestUrl);
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const createEntity = createAsyncThunk(
+  'animalEvento/create_entity',
+  async (entity: IAnimalEvento, thunkAPI) => {
+    const result = await axios.post<IAnimalEvento>(apiUrl, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const updateEntity = createAsyncThunk(
+  'animalEvento/update_entity',
+  async (entity: IAnimalEvento, thunkAPI) => {
+    const result = await axios.put<IAnimalEvento>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const partialUpdateEntity = createAsyncThunk(
+  'animalEvento/partial_update_entity',
+  async (entity: IAnimalEvento, thunkAPI) => {
+    const result = await axios.patch<IAnimalEvento>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const deleteEntity = createAsyncThunk(
+  'animalEvento/delete_entity',
+  async (id: string | number, thunkAPI) => {
+    const requestUrl = `${apiUrl}/${id}`;
+    const result = await axios.delete<IAnimalEvento>(requestUrl);
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+// slice
+
+export const AnimalEventoSlice = createEntitySlice({
+  name: 'animalEvento',
+  initialState,
+  extraReducers(builder) {
+    builder
+      .addCase(getEntity.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entity = action.payload.data;
+      })
+      .addCase(deleteEntity.fulfilled, state => {
+        state.updating = false;
+        state.updateSuccess = true;
+        state.entity = {};
+      })
+      .addMatcher(isFulfilled(getEntities), (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          entities: action.payload.data,
+          totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+        };
+      })
+      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
+        state.updating = false;
+        state.loading = false;
+        state.updateSuccess = true;
+        state.entity = action.payload.data;
+      })
+      .addMatcher(isPending(getEntities, getEntity), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.loading = true;
+      })
+      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.updating = true;
+      });
+  },
+});
+
+export const { reset } = AnimalEventoSlice.actions;
+
+// Reducer
+export default AnimalEventoSlice.reducer;

@@ -1,31 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './potrero-actividad.reducer';
-import { IPotreroActividad } from 'app/shared/model/potrero-actividad.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IPotreroActividadDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PotreroActividadDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PotreroActividadDetail = (props: IPotreroActividadDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { potreroActividadEntity } = props;
+  const potreroActividadEntity = useAppSelector(state => state.potreroActividad.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.potreroActividad.detail.title">PotreroActividad</Translate> [
-          <b>{potreroActividadEntity.id}</b>]
+        <h2 data-cy="potreroActividadDetailsHeading">
+          <Translate contentKey="agrofincaApp.potreroActividad.detail.title">PotreroActividad</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{potreroActividadEntity.id}</dd>
           <dt>
             <span id="fechaIngreso">
               <Translate contentKey="agrofincaApp.potreroActividad.fechaIngreso">Fecha Ingreso</Translate>
@@ -93,17 +96,24 @@ export const PotreroActividadDetail = (props: IPotreroActividadDetailProps) => {
           </dt>
           <dd>{potreroActividadEntity.ocupado}</dd>
           <dt>
-            <Translate contentKey="agrofincaApp.potreroActividad.lote">Lote</Translate>
+            <Translate contentKey="agrofincaApp.potreroActividad.animal">Animal</Translate>
           </dt>
           <dd>
-            {potreroActividadEntity.lote ? potreroActividadEntity.lote.nombre : ''}
+            {potreroActividadEntity.animals
+              ? potreroActividadEntity.animals.map((val, i) => (
+                  <span key={val.id}>
+                    <a>{val.id}</a>
+                    {potreroActividadEntity.animals && i === potreroActividadEntity.animals.length - 1 ? '' : ', '}
+                  </span>
+                ))
+              : null}
           </dd>
           <dt>
             <Translate contentKey="agrofincaApp.potreroActividad.potrero">Potrero</Translate>
           </dt>
-          <dd>{potreroActividadEntity.potrero ? potreroActividadEntity.potrero.nombre : ''}</dd>
+          <dd>{potreroActividadEntity.potrero ? potreroActividadEntity.potrero.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/potrero-actividad" replace color="info">
+        <Button tag={Link} to="/potrero-actividad" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -121,13 +131,4 @@ export const PotreroActividadDetail = (props: IPotreroActividadDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ potreroActividad }: IRootState) => ({
-  potreroActividadEntity: potreroActividad.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PotreroActividadDetail);
+export default PotreroActividadDetail;

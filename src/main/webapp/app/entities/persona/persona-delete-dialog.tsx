@@ -1,39 +1,39 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IPersona } from 'app/shared/model/persona.model';
-import { IRootState } from 'app/shared/reducers';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity, deleteEntity } from './persona.reducer';
 
-export interface IPersonaDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PersonaDeleteDialog = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PersonaDeleteDialog = (props: IPersonaDeleteDialogProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
+
+  const personaEntity = useAppSelector(state => state.persona.entity);
+  const updateSuccess = useAppSelector(state => state.persona.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/persona' + props.location.search);
   };
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.personaEntity.id);
+    dispatch(deleteEntity(personaEntity.id));
   };
 
-  const { personaEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
+      <ModalHeader toggle={handleClose} data-cy="personaDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="agrofincaApp.persona.delete.question">
@@ -47,7 +47,7 @@ export const PersonaDeleteDialog = (props: IPersonaDeleteDialogProps) => {
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-persona" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-persona" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -57,14 +57,4 @@ export const PersonaDeleteDialog = (props: IPersonaDeleteDialogProps) => {
   );
 };
 
-const mapStateToProps = ({ persona }: IRootState) => ({
-  personaEntity: persona.entity,
-  updateSuccess: persona.updateSuccess,
-});
-
-const mapDispatchToProps = { getEntity, deleteEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PersonaDeleteDialog);
+export default PersonaDeleteDialog;
