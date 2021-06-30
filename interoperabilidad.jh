@@ -1,0 +1,62 @@
+entity Cargue {
+	cargNroRegistros Integer required,
+    cargJson String required,
+    cargEntidad Integer required,
+    cargNombreArchivo String required,
+    cargEstado String required,
+    cargTipo String required, 
+    cargEsReproceso Integer required, 
+    cargHash String required, 
+    usuarioCreacion String required, 
+    fechaCreacion ZonedDateTime required,
+    usuarioModificacion String,
+    fechaModificacion ZonedDateTime
+}
+
+entity DetalleCargue {
+	decaCup String required, 
+    decaEstado String required, 
+    decaJSON String required
+}
+
+entity ErrorCargue {
+	ercaError String required,
+}
+
+entity TipoParametro {
+    tipaDescripcion String required
+}
+
+entity ParametroDominio {
+	padoId Integer required,
+    padoDescripcion String required
+}
+
+relationship OneToOne {
+	Cargue{cargId} to DetalleCargue
+}
+
+relationship OneToOne {
+	Cargue{cargId} to ErrorCargue
+}
+
+relationship OneToOne {
+	DetalleCargue{decaId} to ErrorCargue
+}
+
+relationship OneToOne {
+	TipoParametro{tipaId} to ParametroDominio
+}
+
+// Set pagination options
+//paginate JobHistory, Employee with infinite-scroll
+//paginate Job with pagination
+
+// Use Data Transfer Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
