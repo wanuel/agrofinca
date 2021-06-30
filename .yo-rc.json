@@ -38,6 +38,29 @@
     "nativeLanguage": "es",
     "languages": ["es", "en"],
     "blueprints": [],
-    "lastLiquibaseTimestamp": 1594237273000
+    "lastLiquibaseTimestamp": 1625086736000,
+    "entities": [
+      "Cargue",
+      "DetalleCargue",
+      "ErrorCargue",
+      "TipoParametro",
+      "ParametroDominio",
+      "Potrero",
+      "Finca",
+      "PotreroActividad",
+      "Animal",
+      "AnimalPastoreo",
+      "Parametros",
+      "AnimalCostos",
+      "AnimalEvento",
+      "AnimalPeso",
+      "AnimalImagen",
+      "AnimalVacunas",
+      "Persona",
+      "PotreroActividadAnimal",
+      "Lote",
+      "AnimalLote",
+      "Annimal"
+    ]
   }
 }

@@ -1,0 +1,25 @@
+{
+  "agrofincaApp": {
+    "tipoParametro": {
+      "home": {
+        "title": "Tipo Parametros",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Tipo Parametro",
+        "createOrEditLabel": "Create or edit a Tipo Parametro",
+        "notFound": "No Tipo Parametros found"
+      },
+      "created": "A new Tipo Parametro is created with identifier {{ param }}",
+      "updated": "A Tipo Parametro is updated with identifier {{ param }}",
+      "deleted": "A Tipo Parametro is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Tipo Parametro {{ id }}?"
+      },
+      "detail": {
+        "title": "Tipo Parametro"
+      },
+      "id": "ID",
+      "tipaDescripcion": "Tipa Descripcion",
+      "tipaId": "Tipa Id"
+    }
+  }
+}

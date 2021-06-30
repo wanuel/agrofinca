@@ -11,12 +11,12 @@ import FincaDeleteDialog from './finca-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={FincaDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={FincaUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={FincaUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={FincaDetail} />
       <ErrorBoundaryRoute path={match.url} component={Finca} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={FincaDeleteDialog} />
   </>
 );
 

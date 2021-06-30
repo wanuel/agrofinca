@@ -1,30 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './parametros.reducer';
-import { IParametros } from 'app/shared/model/parametros.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IParametrosDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const ParametrosDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const ParametrosDetail = (props: IParametrosDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { parametrosEntity } = props;
+  const parametrosEntity = useAppSelector(state => state.parametros.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.parametros.detail.title">Parametros</Translate> [<b>{parametrosEntity.id}</b>]
+        <h2 data-cy="parametrosDetailsHeading">
+          <Translate contentKey="agrofincaApp.parametros.detail.title">Parametros</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{parametrosEntity.id}</dd>
           <dt>
             <span id="descripcion">
               <Translate contentKey="agrofincaApp.parametros.descripcion">Descripcion</Translate>
@@ -36,7 +40,7 @@ export const ParametrosDetail = (props: IParametrosDetailProps) => {
           </dt>
           <dd>{parametrosEntity.padre ? parametrosEntity.padre.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/parametros" replace color="info">
+        <Button tag={Link} to="/parametros" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -54,13 +58,4 @@ export const ParametrosDetail = (props: IParametrosDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ parametros }: IRootState) => ({
-  parametrosEntity: parametros.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(ParametrosDetail);
+export default ParametrosDetail;

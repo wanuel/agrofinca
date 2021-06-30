@@ -1,0 +1,24 @@
+{
+  "agrofincaApp": {
+    "errorCargue": {
+      "home": {
+        "title": "Error Cargues",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Error Cargue",
+        "createOrEditLabel": "Crear o editar Error Cargue",
+        "notFound": "Ningún Error Cargues encontrado"
+      },
+      "created": "Un nuevo Error Cargue ha sido creado con el identificador {{ param }}",
+      "updated": "Un Error Cargue ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Error Cargue ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Error Cargue {{ id }}?"
+      },
+      "detail": {
+        "title": "Error Cargue"
+      },
+      "id": "ID",
+      "ercaError": "Erca Error"
+    }
+  }
+}

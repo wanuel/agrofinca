@@ -1,19 +1,15 @@
 package co.cima.agrofinca.service.impl;
 
-import java.util.List;
+import co.cima.agrofinca.domain.Potrero;
+import co.cima.agrofinca.repository.PotreroRepository;
+import co.cima.agrofinca.service.PotreroService;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import co.cima.agrofinca.domain.Potrero;
-import co.cima.agrofinca.domain.vo.ListVO;
-import co.cima.agrofinca.repository.PotreroRepository;
-import co.cima.agrofinca.service.PotreroService;
 
 /**
  * Service Implementation for managing {@link Potrero}.
@@ -22,75 +18,64 @@ import co.cima.agrofinca.service.PotreroService;
 @Transactional
 public class PotreroServiceImpl implements PotreroService {
 
-    private final Logger log = LoggerFactory.getLogger(PotreroServiceImpl.class);
+  private final Logger log = LoggerFactory.getLogger(PotreroServiceImpl.class);
 
-    private final PotreroRepository potreroRepository;
+  private final PotreroRepository potreroRepository;
 
-    public PotreroServiceImpl(PotreroRepository potreroRepository) {
-        this.potreroRepository = potreroRepository;
-    }
+  public PotreroServiceImpl(PotreroRepository potreroRepository) {
+    this.potreroRepository = potreroRepository;
+  }
 
-    /**
-     * Save a potrero.
-     *
-     * @param potrero the entity to save.
-     * @return the persisted entity.
-     */
-    @Override
-    public Potrero save(Potrero potrero) {
-        log.debug("Request to save Potrero : {}", potrero);
-        return potreroRepository.save(potrero);
-    }
+  @Override
+  public Potrero save(Potrero potrero) {
+    log.debug("Request to save Potrero : {}", potrero);
+    return potreroRepository.save(potrero);
+  }
 
-    /**
-     * Get all the potreros.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Potrero> findAll(Pageable pageable) {
-        log.debug("Request to get all Potreros");
-        return potreroRepository.findAll(pageable);
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public List<Potrero> findAll() {
-        log.debug("Request to get all Potreros");
-        return potreroRepository.findAll();
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public List<ListVO> findListVO() {
-        log.debug("Request to get all Potreros");
-        return potreroRepository.findListVO();
-    }
+  @Override
+  public Optional<Potrero> partialUpdate(Potrero potrero) {
+    log.debug("Request to partially update Potrero : {}", potrero);
 
+    return potreroRepository
+      .findById(potrero.getId())
+      .map(
+        existingPotrero -> {
+          if (potrero.getNombre() != null) {
+            existingPotrero.setNombre(potrero.getNombre());
+          }
+          if (potrero.getDescripcion() != null) {
+            existingPotrero.setDescripcion(potrero.getDescripcion());
+          }
+          if (potrero.getPasto() != null) {
+            existingPotrero.setPasto(potrero.getPasto());
+          }
+          if (potrero.getArea() != null) {
+            existingPotrero.setArea(potrero.getArea());
+          }
 
-    /**
-     * Get one potrero by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Potrero> findOne(Long id) {
-        log.debug("Request to get Potrero : {}", id);
-        return potreroRepository.findById(id);
-    }
+          return existingPotrero;
+        }
+      )
+      .map(potreroRepository::save);
+  }
 
-    /**
-     * Delete the potrero by id.
-     *
-     * @param id the id of the entity.
-     */
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Potrero : {}", id);
-        potreroRepository.deleteById(id);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public Page<Potrero> findAll(Pageable pageable) {
+    log.debug("Request to get all Potreros");
+    return potreroRepository.findAll(pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<Potrero> findOne(Long id) {
+    log.debug("Request to get Potrero : {}", id);
+    return potreroRepository.findById(id);
+  }
+
+  @Override
+  public void delete(Long id) {
+    log.debug("Request to delete Potrero : {}", id);
+    potreroRepository.deleteById(id);
+  }
 }

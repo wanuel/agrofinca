@@ -3,6 +3,7 @@
     "animalImagen": {
       "home": {
         "title": "Animal Imagens",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Animal Imagen",
         "createOrEditLabel": "Crear o editar Animal Imagen",
         "notFound": "Ningún Animal Imagens encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Animal Imagen"
       },
+      "id": "ID",
       "fecha": "Fecha",
       "nota": "Nota",
       "imagen": "Imagen",

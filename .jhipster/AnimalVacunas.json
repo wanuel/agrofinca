@@ -4,16 +4,12 @@
     {
       "fieldName": "fecha",
       "fieldType": "LocalDate",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "nombre",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "laboratorio",
@@ -22,9 +18,7 @@
     {
       "fieldName": "dosis",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [

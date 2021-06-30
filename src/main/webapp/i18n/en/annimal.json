@@ -3,6 +3,7 @@
     "annimal": {
       "home": {
         "title": "Annimals",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Annimal",
         "createOrEditLabel": "Create or edit a Annimal",
         "notFound": "No Annimals found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Annimal"
       },
+      "id": "ID",
       "nombre": "Nombre",
       "lotes": "Lotes"
     }

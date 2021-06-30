@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
 import { IParametros } from 'app/shared/model/parametros.model';
 import { getEntities as getParametros } from 'app/entities/parametros/parametros.reducer';
@@ -15,16 +12,19 @@ import { getEntity, updateEntity, createEntity, reset } from './animal.reducer';
 import { IAnimal } from 'app/shared/model/animal.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IAnimalUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const AnimalUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalUpdate = (props: IAnimalUpdateProps) => {
-  const [tipoId, setTipoId] = useState('0');
-  const [razaId, setRazaId] = useState('0');
-  const [potreroId, setPotreroId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { animalEntity, parametros, potreroActividads, loading, updating } = props;
+  const parametros = useAppSelector(state => state.parametros.entities);
+  const potreroActividads = useAppSelector(state => state.potreroActividad.entities);
+  const animalEntity = useAppSelector(state => state.animal.entity);
+  const loading = useAppSelector(state => state.animal.loading);
+  const updating = useAppSelector(state => state.animal.updating);
+  const updateSuccess = useAppSelector(state => state.animal.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/animal' + props.location.search);
@@ -32,41 +32,54 @@ export const AnimalUpdate = (props: IAnimalUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getParametros();
-    props.getPotreroActividads();
+    dispatch(getParametros({}));
+    dispatch(getPotreroActividads({}));
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...animalEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...animalEntity,
+      ...values,
+      tipo: parametros.find(it => it.id.toString() === values.tipoId.toString()),
+      raza: parametros.find(it => it.id.toString() === values.razaId.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...animalEntity,
+          hierro: 'S',
+          sexo: 'MACHO',
+          castrado: 'S',
+          estado: 'VIVO',
+          tipoId: animalEntity?.tipo?.id,
+          razaId: animalEntity?.raza?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.animal.home.createOrEditLabel">
+          <h2 id="agrofincaApp.animal.home.createOrEditLabel" data-cy="AnimalCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.animal.home.createOrEditLabel">Create or edit a Animal</Translate>
           </h2>
         </Col>
@@ -76,136 +89,107 @@ export const AnimalUpdate = (props: IAnimalUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : animalEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="animal-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="animal-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="animal-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
+                />
               ) : null}
-              <AvGroup>
-                <Label id="nombreLabel" for="animal-nombre">
-                  <Translate contentKey="agrofincaApp.animal.nombre">Nombre</Translate>
-                </Label>
-                <AvField id="animal-nombre" type="text" name="nombre" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="caracterizacionLabel" for="animal-caracterizacion">
-                  <Translate contentKey="agrofincaApp.animal.caracterizacion">Caracterizacion</Translate>
-                </Label>
-                <AvField id="animal-caracterizacion" type="text" name="caracterizacion" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="hierroLabel" for="animal-hierro">
-                  <Translate contentKey="agrofincaApp.animal.hierro">Hierro</Translate>
-                </Label>
-                <AvInput
-                  id="animal-hierro"
-                  type="select"
-                  className="form-control"
-                  name="hierro"
-                  value={(!isNew && animalEntity.hierro) || 'S'}
-                >
-                  <option value="SI">{translate('agrofincaApp.SINO.SI')}</option>
-                  <option value="NO">{translate('agrofincaApp.SINO.NO')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label id="fechaNacimientoLabel" for="animal-fechaNacimiento">
-                  <Translate contentKey="agrofincaApp.animal.fechaNacimiento">Fecha Nacimiento</Translate>
-                </Label>
-                <AvField id="animal-fechaNacimiento" type="date" className="form-control" name="fechaNacimiento" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="fechaCompraLabel" for="animal-fechaCompra">
-                  <Translate contentKey="agrofincaApp.animal.fechaCompra">Fecha Compra</Translate>
-                </Label>
-                <AvField id="animal-fechaCompra" type="date" className="form-control" name="fechaCompra" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="sexoLabel" for="animal-sexo">
-                  <Translate contentKey="agrofincaApp.animal.sexo">Sexo</Translate>
-                </Label>
-                <AvInput
-                  id="animal-sexo"
-                  type="select"
-                  className="form-control"
-                  name="sexo"
-                  value={(!isNew && animalEntity.sexo) || 'MACHO'}
-                >
-                  <option value="MACHO">{translate('agrofincaApp.SEXO.MACHO')}</option>
-                  <option value="HEMBRA">{translate('agrofincaApp.SEXO.HEMBRA')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label id="castradoLabel" for="animal-castrado">
-                  <Translate contentKey="agrofincaApp.animal.castrado">Castrado</Translate>
-                </Label>
-                <AvInput
-                  id="animal-castrado"
-                  type="select"
-                  className="form-control"
-                  name="castrado"
-                  value={(!isNew && animalEntity.castrado) || 'SI'}
-                >
-                  <option value="SI">{translate('agrofincaApp.SINO.SI')}</option>
-                  <option value="NO">{translate('agrofincaApp.SINO.NO')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label id="fechaCastracionLabel" for="animal-fechaCastracion">
-                  <Translate contentKey="agrofincaApp.animal.fechaCastracion">Fecha Castracion</Translate>
-                </Label>
-                <AvField id="animal-fechaCastracion" type="date" className="form-control" name="fechaCastracion" />
-              </AvGroup>
-              <AvGroup>
-                <Label id="estadoLabel" for="animal-estado">
-                  <Translate contentKey="agrofincaApp.animal.estado">Estado</Translate>
-                </Label>
-                <AvInput
-                  id="animal-estado"
-                  type="select"
-                  className="form-control"
-                  name="estado"
-                  value={(!isNew && animalEntity.estado) || 'VIVO'}
-                >
-                  <option value="VIVO">{translate('agrofincaApp.ESTADOANIMAL.VIVO')}</option>
-                  <option value="MUERTO">{translate('agrofincaApp.ESTADOANIMAL.MUERTO')}</option>
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label for="animal-tipo">
-                  <Translate contentKey="agrofincaApp.animal.tipo">Tipo</Translate>
-                </Label>
-                <AvInput id="animal-tipo" type="select" className="form-control" name="tipo.id">
-                  <option value="" key="0" />
-                  {parametros
-                    ? parametros.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label for="animal-raza">
-                  <Translate contentKey="agrofincaApp.animal.raza">Raza</Translate>
-                </Label>
-                <AvInput id="animal-raza" type="select" className="form-control" name="raza.id">
-                  <option value="" key="0" />
-                  {parametros
-                    ? parametros.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.id}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/animal" replace color="info">
+              <ValidatedField
+                label={translate('agrofincaApp.animal.nombre')}
+                id="animal-nombre"
+                name="nombre"
+                data-cy="nombre"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.animal.caracterizacion')}
+                id="animal-caracterizacion"
+                name="caracterizacion"
+                data-cy="caracterizacion"
+                type="text"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.animal.hierro')}
+                id="animal-hierro"
+                name="hierro"
+                data-cy="hierro"
+                type="select"
+              >
+                <option value="S">{translate('agrofincaApp.SINO.S')}</option>
+                <option value="N">{translate('agrofincaApp.SINO.N')}</option>
+              </ValidatedField>
+              <ValidatedField
+                label={translate('agrofincaApp.animal.fechaNacimiento')}
+                id="animal-fechaNacimiento"
+                name="fechaNacimiento"
+                data-cy="fechaNacimiento"
+                type="date"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.animal.fechaCompra')}
+                id="animal-fechaCompra"
+                name="fechaCompra"
+                data-cy="fechaCompra"
+                type="date"
+              />
+              <ValidatedField label={translate('agrofincaApp.animal.sexo')} id="animal-sexo" name="sexo" data-cy="sexo" type="select">
+                <option value="MACHO">{translate('agrofincaApp.SEXO.MACHO')}</option>
+                <option value="HEMBRA">{translate('agrofincaApp.SEXO.HEMBRA')}</option>
+              </ValidatedField>
+              <ValidatedField
+                label={translate('agrofincaApp.animal.castrado')}
+                id="animal-castrado"
+                name="castrado"
+                data-cy="castrado"
+                type="select"
+              >
+                <option value="S">{translate('agrofincaApp.SINO.S')}</option>
+                <option value="N">{translate('agrofincaApp.SINO.N')}</option>
+              </ValidatedField>
+              <ValidatedField
+                label={translate('agrofincaApp.animal.fechaCastracion')}
+                id="animal-fechaCastracion"
+                name="fechaCastracion"
+                data-cy="fechaCastracion"
+                type="date"
+              />
+              <ValidatedField
+                label={translate('agrofincaApp.animal.estado')}
+                id="animal-estado"
+                name="estado"
+                data-cy="estado"
+                type="select"
+              >
+                <option value="VIVO">{translate('agrofincaApp.ESTADOANIMAL.VIVO')}</option>
+                <option value="MUERTO">{translate('agrofincaApp.ESTADOANIMAL.MUERTO')}</option>
+              </ValidatedField>
+              <ValidatedField id="animal-tipo" name="tipoId" data-cy="tipo" label={translate('agrofincaApp.animal.tipo')} type="select">
+                <option value="" key="0" />
+                {parametros
+                  ? parametros.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField id="animal-raza" name="razaId" data-cy="raza" label={translate('agrofincaApp.animal.raza')} type="select">
+                <option value="" key="0" />
+                {parametros
+                  ? parametros.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/animal" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -213,12 +197,12 @@ export const AnimalUpdate = (props: IAnimalUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -226,25 +210,4 @@ export const AnimalUpdate = (props: IAnimalUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  parametros: storeState.parametros.entities,
-  potreroActividads: storeState.potreroActividad.entities,
-  animalEntity: storeState.animal.entity,
-  loading: storeState.animal.loading,
-  updating: storeState.animal.updating,
-  updateSuccess: storeState.animal.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getParametros,
-  getPotreroActividads,
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalUpdate);
+export default AnimalUpdate;

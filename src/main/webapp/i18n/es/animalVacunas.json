@@ -3,6 +3,7 @@
     "animalVacunas": {
       "home": {
         "title": "Animal Vacunas",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Animal Vacunas",
         "createOrEditLabel": "Crear o editar Animal Vacunas",
         "notFound": "Ningún Animal Vacunas encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Animal Vacunas"
       },
+      "id": "ID",
       "fecha": "Fecha",
       "nombre": "Nombre",
       "laboratorio": "Laboratorio",

@@ -1,43 +1,54 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './potrero-actividad-animal.reducer';
-import { IPotreroActividadAnimal } from 'app/shared/model/potrero-actividad-animal.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IPotreroActividadAnimalDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PotreroActividadAnimalDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PotreroActividadAnimalDetail = (props: IPotreroActividadAnimalDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { potreroActividadAnimalEntity } = props;
+  const potreroActividadAnimalEntity = useAppSelector(state => state.potreroActividadAnimal.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.potreroActividadAnimal.detail.title">PotreroActividadAnimal</Translate> [
+        <h2 data-cy="potreroActividadAnimalDetailsHeading">
+          <Translate contentKey="agrofincaApp.potreroActividadAnimal.detail.title">PotreroActividadAnimal</Translate>
         </h2>
         <dl className="jh-entity-details">
           <dt>
-            <Translate contentKey="agrofincaApp.potreroActividadAnimal.animal">Animal Id</Translate>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
           </dt>
-          <dd>{potreroActividadAnimalEntity.animal ? potreroActividadAnimalEntity.animal.nombre : ''}</dd>
+          <dd>{potreroActividadAnimalEntity.id}</dd>
           <dt>
-            <Translate contentKey="agrofincaApp.potreroActividadAnimal.potreroActividad">Potrero Actividad Id</Translate>
+            <Translate contentKey="agrofincaApp.potreroActividadAnimal.animalId">Animal Id</Translate>
           </dt>
-          <dd>{potreroActividadAnimalEntity.potreroActividad ? potreroActividadAnimalEntity.potreroActividad.potrero.nombre : ''}</dd>
+          <dd>{potreroActividadAnimalEntity.animalId ? potreroActividadAnimalEntity.animalId.pastoreo : ''}</dd>
+          <dt>
+            <Translate contentKey="agrofincaApp.potreroActividadAnimal.potreroActividadId">Potrero Actividad Id</Translate>
+          </dt>
+          <dd>{potreroActividadAnimalEntity.potreroActividadId ? potreroActividadAnimalEntity.potreroActividadId.pastoreo : ''}</dd>
         </dl>
-        <Button tag={Link} to="/potrero-actividad-animal" replace color="info">
+        <Button tag={Link} to="/potrero-actividad-animal" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
+          </span>
+        </Button>
+        &nbsp;
+        <Button tag={Link} to={`/potrero-actividad-animal/${potreroActividadAnimalEntity.id}/edit`} replace color="primary">
+          <FontAwesomeIcon icon="pencil-alt" />{' '}
+          <span className="d-none d-md-inline">
+            <Translate contentKey="entity.action.edit">Edit</Translate>
           </span>
         </Button>
       </Col>
@@ -45,13 +56,4 @@ export const PotreroActividadAnimalDetail = (props: IPotreroActividadAnimalDetai
   );
 };
 
-const mapStateToProps = ({ potreroActividadAnimal }: IRootState) => ({
-  potreroActividadAnimalEntity: potreroActividadAnimal.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PotreroActividadAnimalDetail);
+export default PotreroActividadAnimalDetail;

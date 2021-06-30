@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity DetalleCargue.
+    -->
+    <changeSet id="20210630205853-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="deca_id_id"
+                                 baseTableName="detalle_cargue"
+                                 constraintName="fk_detalle_cargue__deca_id_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="error_cargue"/>
+    </changeSet>
+</databaseChangeLog>

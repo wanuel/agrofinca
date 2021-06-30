@@ -14,7 +14,42 @@
     <property name="uuidType" value="varchar(36)" dbms="h2, mysql, mariadb"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200627002924_added_entity_Potrero.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200629002353_added_entity_Finca.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200701025250_added_entity_PotreroActividad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011155_added_entity_Animal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011255_added_entity_AnimalPastoreo.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011355_added_entity_Parametros.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011455_added_entity_AnimalCostos.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011555_added_entity_AnimalEvento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011655_added_entity_AnimalPeso.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011755_added_entity_AnimalImagen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011855_added_entity_AnimalVacunas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011955_added_entity_Persona.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200708194113_added_entity_PotreroActividadAnimal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201013215716_added_entity_Lote.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201013215816_added_entity_AnimalLote.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201013215916_added_entity_Annimal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205852_added_entity_Cargue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205853_added_entity_DetalleCargue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205854_added_entity_ErrorCargue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205855_added_entity_TipoParametro.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205856_added_entity_ParametroDominio.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20200627002924_added_entity_constraints_Potrero.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200701025250_added_entity_constraints_PotreroActividad.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011155_added_entity_constraints_Animal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011355_added_entity_constraints_Parametros.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011455_added_entity_constraints_AnimalCostos.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011555_added_entity_constraints_AnimalEvento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011655_added_entity_constraints_AnimalPeso.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011755_added_entity_constraints_AnimalImagen.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200702011855_added_entity_constraints_AnimalVacunas.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200708194113_added_entity_constraints_PotreroActividadAnimal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201013215816_added_entity_constraints_AnimalLote.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205852_added_entity_constraints_Cargue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205853_added_entity_constraints_DetalleCargue.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210630205855_added_entity_constraints_TipoParametro.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

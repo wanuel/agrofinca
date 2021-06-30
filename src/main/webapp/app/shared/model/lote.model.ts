@@ -1,4 +1,4 @@
-import { Moment } from 'moment';
+import dayjs from 'dayjs';
 import { IAnimalLote } from 'app/shared/model/animal-lote.model';
 import { TipoLoteEnum } from 'app/shared/model/enumerations/tipo-lote-enum.model';
 
@@ -8,7 +8,7 @@ export interface ILote {
   tipo?: TipoLoteEnum;
   fecha?: string;
   numeroAnimales?: number;
-  animales?: IAnimalLote[];
+  animales?: IAnimalLote[] | null;
 }
 
 export const defaultValue: Readonly<ILote> = {};

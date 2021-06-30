@@ -1,39 +1,39 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Translate, ICrudGetAction, ICrudDeleteAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IPotrero } from 'app/shared/model/potrero.model';
-import { IRootState } from 'app/shared/reducers';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 import { getEntity, deleteEntity } from './potrero.reducer';
 
-export interface IPotreroDeleteDialogProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PotreroDeleteDialog = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PotreroDeleteDialog = (props: IPotreroDeleteDialogProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
+
+  const potreroEntity = useAppSelector(state => state.potrero.entity);
+  const updateSuccess = useAppSelector(state => state.potrero.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/potrero' + props.location.search);
   };
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
   const confirmDelete = () => {
-    props.deleteEntity(props.potreroEntity.id);
+    dispatch(deleteEntity(potreroEntity.id));
   };
 
-  const { potreroEntity } = props;
   return (
     <Modal isOpen toggle={handleClose}>
-      <ModalHeader toggle={handleClose}>
+      <ModalHeader toggle={handleClose} data-cy="potreroDeleteDialogHeading">
         <Translate contentKey="entity.delete.title">Confirm delete operation</Translate>
       </ModalHeader>
       <ModalBody id="agrofincaApp.potrero.delete.question">
@@ -47,7 +47,7 @@ export const PotreroDeleteDialog = (props: IPotreroDeleteDialogProps) => {
           &nbsp;
           <Translate contentKey="entity.action.cancel">Cancel</Translate>
         </Button>
-        <Button id="jhi-confirm-delete-potrero" color="danger" onClick={confirmDelete}>
+        <Button id="jhi-confirm-delete-potrero" data-cy="entityConfirmDeleteButton" color="danger" onClick={confirmDelete}>
           <FontAwesomeIcon icon="trash" />
           &nbsp;
           <Translate contentKey="entity.action.delete">Delete</Translate>
@@ -57,14 +57,4 @@ export const PotreroDeleteDialog = (props: IPotreroDeleteDialogProps) => {
   );
 };
 
-const mapStateToProps = ({ potrero }: IRootState) => ({
-  potreroEntity: potrero.entity,
-  updateSuccess: potrero.updateSuccess,
-});
-
-const mapDispatchToProps = { getEntity, deleteEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PotreroDeleteDialog);
+export default PotreroDeleteDialog;

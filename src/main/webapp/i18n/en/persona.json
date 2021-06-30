@@ -3,6 +3,7 @@
     "persona": {
       "home": {
         "title": "Personas",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Persona",
         "createOrEditLabel": "Create or edit a Persona",
         "notFound": "No Personas found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Persona"
       },
+      "id": "ID",
       "tipoDocumento": "Tipo Documento",
       "numDocuemnto": "Num Docuemnto",
       "primerNombre": "Primer Nombre",

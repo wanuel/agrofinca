@@ -1,0 +1,29 @@
+{
+  "name": "TipoParametro",
+  "fields": [
+    {
+      "fieldName": "tipaDescripcion",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "parametroDominio",
+      "otherEntityRelationshipName": "tipoParametro",
+      "relationshipName": "tipaId",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "tipo_parametro",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210630205855"
+}

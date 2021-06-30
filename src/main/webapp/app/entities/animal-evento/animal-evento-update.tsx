@@ -1,29 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Row, Col, Label } from 'reactstrap';
-import { AvFeedback, AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
-import { Translate, translate, ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { Button, Row, Col, FormText } from 'reactstrap';
+import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IRootState } from 'app/shared/reducers';
 
 import { IAnimal } from 'app/shared/model/animal.model';
-import { getEntities as getanimales } from 'app/entities/animal/animal.reducer';
+import { getEntities as getAnimals } from 'app/entities/animal/animal.reducer';
 import { IParametros } from 'app/shared/model/parametros.model';
 import { getEntities as getParametros } from 'app/entities/parametros/parametros.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './animal-evento.reducer';
 import { IAnimalEvento } from 'app/shared/model/animal-evento.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IAnimalEventoUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const AnimalEventoUpdate = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
-  const [animalId, setAnimalId] = useState('0');
-  const [eventoId, setEventoId] = useState('0');
-  const [isNew, setIsNew] = useState(!props.match.params || !props.match.params.id);
+  const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const { animalEventoEntity, animales, parametros, loading, updating } = props;
+  const animals = useAppSelector(state => state.animal.entities);
+  const parametros = useAppSelector(state => state.parametros.entities);
+  const animalEventoEntity = useAppSelector(state => state.animalEvento.entity);
+  const loading = useAppSelector(state => state.animalEvento.loading);
+  const updating = useAppSelector(state => state.animalEvento.updating);
+  const updateSuccess = useAppSelector(state => state.animalEvento.updateSuccess);
 
   const handleClose = () => {
     props.history.push('/animal-evento' + props.location.search);
@@ -31,41 +32,50 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
 
   useEffect(() => {
     if (isNew) {
-      props.reset();
+      dispatch(reset());
     } else {
-      props.getEntity(props.match.params.id);
+      dispatch(getEntity(props.match.params.id));
     }
 
-    props.getanimales();
-    props.getParametros();
+    dispatch(getAnimals({}));
+    dispatch(getParametros({}));
   }, []);
 
   useEffect(() => {
-    if (props.updateSuccess) {
+    if (updateSuccess) {
       handleClose();
     }
-  }, [props.updateSuccess]);
+  }, [updateSuccess]);
 
-  const saveEntity = (event, errors, values) => {
-    if (errors.length === 0) {
-      const entity = {
-        ...animalEventoEntity,
-        ...values,
-      };
+  const saveEntity = values => {
+    const entity = {
+      ...animalEventoEntity,
+      ...values,
+      animal: animals.find(it => it.id.toString() === values.animalId.toString()),
+      evento: parametros.find(it => it.id.toString() === values.eventoId.toString()),
+    };
 
-      if (isNew) {
-        props.createEntity(entity);
-      } else {
-        props.updateEntity(entity);
-      }
+    if (isNew) {
+      dispatch(createEntity(entity));
+    } else {
+      dispatch(updateEntity(entity));
     }
   };
+
+  const defaultValues = () =>
+    isNew
+      ? {}
+      : {
+          ...animalEventoEntity,
+          animalId: animalEventoEntity?.animal?.id,
+          eventoId: animalEventoEntity?.evento?.id,
+        };
 
   return (
     <div>
       <Row className="justify-content-center">
         <Col md="8">
-          <h2 id="agrofincaApp.animalEvento.home.createOrEditLabel">
+          <h2 id="agrofincaApp.animalEvento.home.createOrEditLabel" data-cy="AnimalEventoCreateUpdateHeading">
             <Translate contentKey="agrofincaApp.animalEvento.home.createOrEditLabel">Create or edit a AnimalEvento</Translate>
           </h2>
         </Col>
@@ -75,52 +85,57 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
           {loading ? (
             <p>Loading...</p>
           ) : (
-            <AvForm model={isNew ? {} : animalEventoEntity} onSubmit={saveEntity}>
+            <ValidatedForm defaultValues={defaultValues()} onSubmit={saveEntity}>
               {!isNew ? (
-                <AvGroup>
-                  <Label for="animal-evento-id">
-                    <Translate contentKey="global.field.id">ID</Translate>
-                  </Label>
-                  <AvInput id="animal-evento-id" type="text" className="form-control" name="id" required readOnly />
-                </AvGroup>
+                <ValidatedField
+                  name="id"
+                  required
+                  readOnly
+                  id="animal-evento-id"
+                  label={translate('global.field.id')}
+                  validate={{ required: true }}
+                />
               ) : null}
-              <AvGroup>
-                <Label id="fechaLabel" for="animal-evento-fecha">
-                  <Translate contentKey="agrofincaApp.animalEvento.fecha">Fecha</Translate>
-                </Label>
-                <AvField id="animal-evento-fecha" type="date" className="form-control" name="fecha" />
-              </AvGroup>
-              <AvGroup>
-                <Label for="animal-evento-animal">
-                  <Translate contentKey="agrofincaApp.animalEvento.animal">Animal</Translate>
-                </Label>
-                <AvInput id="animal-evento-animal" type="select" className="form-control" name="animal.id">
-                  <option value="" key="0" />
-                  {animales
-                    ? animales.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.nombre}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <AvGroup>
-                <Label for="animal-evento-evento">
-                  <Translate contentKey="agrofincaApp.animalEvento.evento">Evento</Translate>
-                </Label>
-                <AvInput id="animal-evento-evento" type="select" className="form-control" name="evento.id">
-                  <option value="" key="0" />
-                  {parametros
-                    ? parametros.map(otherEntity => (
-                        <option value={otherEntity.id} key={otherEntity.id}>
-                          {otherEntity.descripcion}
-                        </option>
-                      ))
-                    : null}
-                </AvInput>
-              </AvGroup>
-              <Button tag={Link} id="cancel-save" to="/animal-evento" replace color="info">
+              <ValidatedField
+                label={translate('agrofincaApp.animalEvento.fecha')}
+                id="animal-evento-fecha"
+                name="fecha"
+                data-cy="fecha"
+                type="date"
+              />
+              <ValidatedField
+                id="animal-evento-animal"
+                name="animalId"
+                data-cy="animal"
+                label={translate('agrofincaApp.animalEvento.animal')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {animals
+                  ? animals.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <ValidatedField
+                id="animal-evento-evento"
+                name="eventoId"
+                data-cy="evento"
+                label={translate('agrofincaApp.animalEvento.evento')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {parametros
+                  ? parametros.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.id}
+                      </option>
+                    ))
+                  : null}
+              </ValidatedField>
+              <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/animal-evento" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
@@ -128,12 +143,12 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
                 </span>
               </Button>
               &nbsp;
-              <Button color="primary" id="save-entity" type="submit" disabled={updating}>
+              <Button color="primary" id="save-entity" data-cy="entityCreateSaveButton" type="submit" disabled={updating}>
                 <FontAwesomeIcon icon="save" />
                 &nbsp;
                 <Translate contentKey="entity.action.save">Save</Translate>
               </Button>
-            </AvForm>
+            </ValidatedForm>
           )}
         </Col>
       </Row>
@@ -141,25 +156,4 @@ export const AnimalEventoUpdate = (props: IAnimalEventoUpdateProps) => {
   );
 };
 
-const mapStateToProps = (storeState: IRootState) => ({
-  animales: storeState.animal.entities,
-  parametros: storeState.parametros.entities,
-  animalEventoEntity: storeState.animalEvento.entity,
-  loading: storeState.animalEvento.loading,
-  updating: storeState.animalEvento.updating,
-  updateSuccess: storeState.animalEvento.updateSuccess,
-});
-
-const mapDispatchToProps = {
-  getanimales,
-  getParametros,
-  getEntity,
-  updateEntity,
-  createEntity,
-  reset,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalEventoUpdate);
+export default AnimalEventoUpdate;

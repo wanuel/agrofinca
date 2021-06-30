@@ -2,23 +2,22 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
     <!--
         Added the constraints for entity AnimalEvento.
     -->
     <changeSet id="20200702011555-2" author="jhipster">
-        
+
         <addForeignKeyConstraint baseColumnNames="animal_id"
                                  baseTableName="animal_evento"
-                                 constraintName="fk_animal_evento_animal_id"
+                                 constraintName="fk_animal_evento__animal_id"
                                  referencedColumnNames="id"
                                  referencedTableName="animal"/>
 
         <addForeignKeyConstraint baseColumnNames="evento_id"
                                  baseTableName="animal_evento"
-                                 constraintName="fk_animal_evento_evento_id"
+                                 constraintName="fk_animal_evento__evento_id"
                                  referencedColumnNames="id"
                                  referencedTableName="parametros"/>
-
     </changeSet>
 </databaseChangeLog>

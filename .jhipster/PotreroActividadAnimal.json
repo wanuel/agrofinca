@@ -26,5 +26,6 @@
   "databaseType": "sql",
   "readOnly": false,
   "jpaMetamodelFiltering": false,
-  "pagination": "infinite-scroll"
+  "pagination": "infinite-scroll",
+  "name": "PotreroActividadAnimal"
 }

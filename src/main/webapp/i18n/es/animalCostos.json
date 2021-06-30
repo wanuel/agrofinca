@@ -3,6 +3,7 @@
     "animalCostos": {
       "home": {
         "title": "Animal Costos",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Animal Costos",
         "createOrEditLabel": "Crear o editar Animal Costos",
         "notFound": "Ningún Animal Costos encontrado"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Animal Costos"
       },
+      "id": "ID",
       "fecha": "Fecha",
       "valor": "Valor",
       "animal": "Animal",

@@ -11,12 +11,12 @@ import PotreroActividadDeleteDialog from './potrero-actividad-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={PotreroActividadDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={PotreroActividadUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={PotreroActividadUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={PotreroActividadDetail} />
       <ErrorBoundaryRoute path={match.url} component={PotreroActividad} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={PotreroActividadDeleteDialog} />
   </>
 );
 

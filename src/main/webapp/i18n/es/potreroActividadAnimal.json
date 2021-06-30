@@ -2,10 +2,11 @@
   "agrofincaApp": {
     "potreroActividadAnimal": {
       "home": {
-        "title": "Potrero Actividad animales",
+        "title": "Potrero Actividad Animals",
+        "refreshListLabel": "Refrescar lista",
         "createLabel": "Crear nuevo Potrero Actividad Animal",
         "createOrEditLabel": "Crear o editar Potrero Actividad Animal",
-        "notFound": "Ningún Potrero Actividad animales encontrado"
+        "notFound": "Ningún Potrero Actividad Animals encontrado"
       },
       "created": "Un nuevo Potrero Actividad Animal ha sido creado con el identificador {{ param }}",
       "updated": "Un Potrero Actividad Animal ha sido actualizado con el identificador {{ param }}",
@@ -16,8 +17,9 @@
       "detail": {
         "title": "Potrero Actividad Animal"
       },
-      "animal": "Nombre Animal",
-      "potreroActividad": "Nombre del potrero"
+      "id": "ID",
+      "animalId": "Animal Id",
+      "potreroActividadId": "Potrero Actividad Id"
     }
   }
 }

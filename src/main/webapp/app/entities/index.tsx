@@ -6,6 +6,13 @@ import ErrorBoundaryRoute from 'app/shared/error/error-boundary-route';
 
 import Lote from './lote';
 import AnimalLote from './animal-lote';
+import Cargue from './cargue';
+import DetalleCargue from './detalle-cargue';
+import ErrorCargue from './error-cargue';
+import TipoParametro from './tipo-parametro';
+import ParametroDominio from './parametro-dominio';
+import AnimalPastoreo from './animal-pastoreo';
+import Annimal from './annimal';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 import Finca from './finca';
 import Potrero from './potrero';
@@ -27,6 +34,13 @@ const Routes = ({ match }) => (
       {/* prettier-ignore */}
       <ErrorBoundaryRoute path={`${match.url}lote`} component={Lote} />
       <ErrorBoundaryRoute path={`${match.url}animal-lote`} component={AnimalLote} />
+      <ErrorBoundaryRoute path={`${match.url}cargue`} component={Cargue} />
+      <ErrorBoundaryRoute path={`${match.url}detalle-cargue`} component={DetalleCargue} />
+      <ErrorBoundaryRoute path={`${match.url}error-cargue`} component={ErrorCargue} />
+      <ErrorBoundaryRoute path={`${match.url}tipo-parametro`} component={TipoParametro} />
+      <ErrorBoundaryRoute path={`${match.url}parametro-dominio`} component={ParametroDominio} />
+      <ErrorBoundaryRoute path={`${match.url}animal-pastoreo`} component={AnimalPastoreo} />
+      <ErrorBoundaryRoute path={`${match.url}annimal`} component={Annimal} />
       {/* jhipster-needle-add-route-path - JHipster will add routes here */}
       <ErrorBoundaryRoute path={`${match.url}finca`} component={Finca} />
       <ErrorBoundaryRoute path={`${match.url}potrero`} component={Potrero} />

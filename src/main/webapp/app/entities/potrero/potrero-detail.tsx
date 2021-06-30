@@ -1,30 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction } from 'react-jhipster';
+import { Translate } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './potrero.reducer';
-import { IPotrero } from 'app/shared/model/potrero.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IPotreroDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PotreroDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PotreroDetail = (props: IPotreroDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { potreroEntity } = props;
+  const potreroEntity = useAppSelector(state => state.potrero.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.potrero.detail.title">Potrero</Translate> [<b>{potreroEntity.id}</b>]
+        <h2 data-cy="potreroDetailsHeading">
+          <Translate contentKey="agrofincaApp.potrero.detail.title">Potrero</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{potreroEntity.id}</dd>
           <dt>
             <span id="nombre">
               <Translate contentKey="agrofincaApp.potrero.nombre">Nombre</Translate>
@@ -52,9 +56,9 @@ export const PotreroDetail = (props: IPotreroDetailProps) => {
           <dt>
             <Translate contentKey="agrofincaApp.potrero.finca">Finca</Translate>
           </dt>
-          <dd>{potreroEntity.finca ? potreroEntity.finca.nombre : ''}</dd>
+          <dd>{potreroEntity.finca ? potreroEntity.finca.id : ''}</dd>
         </dl>
-        <Button tag={Link} to="/potrero" replace color="info">
+        <Button tag={Link} to="/potrero" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -72,13 +76,4 @@ export const PotreroDetail = (props: IPotreroDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ potrero }: IRootState) => ({
-  potreroEntity: potrero.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PotreroDetail);
+export default PotreroDetail;

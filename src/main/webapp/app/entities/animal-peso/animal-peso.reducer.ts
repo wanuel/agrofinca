@@ -1,148 +1,123 @@
 import axios from 'axios';
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction, ICrudDeleteAction } from 'react-jhipster';
+import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/toolkit';
 
 import { cleanEntity } from 'app/shared/util/entity-utils';
-import { REQUEST, SUCCESS, FAILURE } from 'app/shared/reducers/action-type.util';
-
+import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IAnimalPeso, defaultValue } from 'app/shared/model/animal-peso.model';
 
-export const ACTION_TYPES = {
-  FETCH_ANIMALPESO_LIST: 'animalPeso/FETCH_ANIMALPESO_LIST',
-  FETCH_ANIMALPESO: 'animalPeso/FETCH_ANIMALPESO',
-  CREATE_ANIMALPESO: 'animalPeso/CREATE_ANIMALPESO',
-  UPDATE_ANIMALPESO: 'animalPeso/UPDATE_ANIMALPESO',
-  DELETE_ANIMALPESO: 'animalPeso/DELETE_ANIMALPESO',
-  RESET: 'animalPeso/RESET',
-};
-
-const initialState = {
+const initialState: EntityState<IAnimalPeso> = {
   loading: false,
   errorMessage: null,
-  entities: [] as ReadonlyArray<IAnimalPeso>,
+  entities: [],
   entity: defaultValue,
   updating: false,
   totalItems: 0,
   updateSuccess: false,
 };
 
-export type AnimalPesoState = Readonly<typeof initialState>;
-
-// Reducer
-
-export default (state: AnimalPesoState = initialState, action): AnimalPesoState => {
-  switch (action.type) {
-    case REQUEST(ACTION_TYPES.FETCH_ANIMALPESO_LIST):
-    case REQUEST(ACTION_TYPES.FETCH_ANIMALPESO):
-      return {
-        ...state,
-        errorMessage: null,
-        updateSuccess: false,
-        loading: true,
-      };
-    case REQUEST(ACTION_TYPES.CREATE_ANIMALPESO):
-    case REQUEST(ACTION_TYPES.UPDATE_ANIMALPESO):
-    case REQUEST(ACTION_TYPES.DELETE_ANIMALPESO):
-      return {
-        ...state,
-        errorMessage: null,
-        updateSuccess: false,
-        updating: true,
-      };
-    case FAILURE(ACTION_TYPES.FETCH_ANIMALPESO_LIST):
-    case FAILURE(ACTION_TYPES.FETCH_ANIMALPESO):
-    case FAILURE(ACTION_TYPES.CREATE_ANIMALPESO):
-    case FAILURE(ACTION_TYPES.UPDATE_ANIMALPESO):
-    case FAILURE(ACTION_TYPES.DELETE_ANIMALPESO):
-      return {
-        ...state,
-        loading: false,
-        updating: false,
-        updateSuccess: false,
-        errorMessage: action.payload,
-      };
-    case SUCCESS(ACTION_TYPES.FETCH_ANIMALPESO_LIST):
-      return {
-        ...state,
-        loading: false,
-        entities: action.payload.data,
-        totalItems: parseInt(action.payload.headers['x-total-count'], 10),
-      };
-    case SUCCESS(ACTION_TYPES.FETCH_ANIMALPESO):
-      return {
-        ...state,
-        loading: false,
-        entity: action.payload.data,
-      };
-    case SUCCESS(ACTION_TYPES.CREATE_ANIMALPESO):
-    case SUCCESS(ACTION_TYPES.UPDATE_ANIMALPESO):
-      return {
-        ...state,
-        updating: false,
-        updateSuccess: true,
-        entity: action.payload.data,
-      };
-    case SUCCESS(ACTION_TYPES.DELETE_ANIMALPESO):
-      return {
-        ...state,
-        updating: false,
-        updateSuccess: true,
-        entity: {},
-      };
-    case ACTION_TYPES.RESET:
-      return {
-        ...initialState,
-      };
-    default:
-      return state;
-  }
-};
-
 const apiUrl = 'api/animal-pesos';
 
 // Actions
 
-export const getEntities: ICrudGetAllAction<IAnimalPeso> = (page, size, sort) => {
-  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}` : ''}`;
-  return {
-    type: ACTION_TYPES.FETCH_ANIMALPESO_LIST,
-    payload: axios.get<IAnimalPeso>(`${requestUrl}${sort ? '&' : '?'}cacheBuster=${new Date().getTime()}`),
-  };
-};
-
-export const getEntity: ICrudGetAction<IAnimalPeso> = id => {
-  const requestUrl = `${apiUrl}/${id}`;
-  return {
-    type: ACTION_TYPES.FETCH_ANIMALPESO,
-    payload: axios.get<IAnimalPeso>(requestUrl),
-  };
-};
-
-export const createEntity: ICrudPutAction<IAnimalPeso> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.CREATE_ANIMALPESO,
-    payload: axios.post(apiUrl, cleanEntity(entity)),
-  });
-  dispatch(getEntities());
-  return result;
-};
-
-export const updateEntity: ICrudPutAction<IAnimalPeso> = entity => async dispatch => {
-  const result = await dispatch({
-    type: ACTION_TYPES.UPDATE_ANIMALPESO,
-    payload: axios.put(apiUrl, cleanEntity(entity)),
-  });
-  return result;
-};
-
-export const deleteEntity: ICrudDeleteAction<IAnimalPeso> = id => async dispatch => {
-  const requestUrl = `${apiUrl}/${id}`;
-  const result = await dispatch({
-    type: ACTION_TYPES.DELETE_ANIMALPESO,
-    payload: axios.delete(requestUrl),
-  });
-  return result;
-};
-
-export const reset = () => ({
-  type: ACTION_TYPES.RESET,
+export const getEntities = createAsyncThunk('animalPeso/fetch_entity_list', async ({ page, size, sort }: IQueryParams) => {
+  const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
+  return axios.get<IAnimalPeso[]>(requestUrl);
 });
+
+export const getEntity = createAsyncThunk(
+  'animalPeso/fetch_entity',
+  async (id: string | number) => {
+    const requestUrl = `${apiUrl}/${id}`;
+    return axios.get<IAnimalPeso>(requestUrl);
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const createEntity = createAsyncThunk(
+  'animalPeso/create_entity',
+  async (entity: IAnimalPeso, thunkAPI) => {
+    const result = await axios.post<IAnimalPeso>(apiUrl, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const updateEntity = createAsyncThunk(
+  'animalPeso/update_entity',
+  async (entity: IAnimalPeso, thunkAPI) => {
+    const result = await axios.put<IAnimalPeso>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const partialUpdateEntity = createAsyncThunk(
+  'animalPeso/partial_update_entity',
+  async (entity: IAnimalPeso, thunkAPI) => {
+    const result = await axios.patch<IAnimalPeso>(`${apiUrl}/${entity.id}`, cleanEntity(entity));
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+export const deleteEntity = createAsyncThunk(
+  'animalPeso/delete_entity',
+  async (id: string | number, thunkAPI) => {
+    const requestUrl = `${apiUrl}/${id}`;
+    const result = await axios.delete<IAnimalPeso>(requestUrl);
+    thunkAPI.dispatch(getEntities({}));
+    return result;
+  },
+  { serializeError: serializeAxiosError }
+);
+
+// slice
+
+export const AnimalPesoSlice = createEntitySlice({
+  name: 'animalPeso',
+  initialState,
+  extraReducers(builder) {
+    builder
+      .addCase(getEntity.fulfilled, (state, action) => {
+        state.loading = false;
+        state.entity = action.payload.data;
+      })
+      .addCase(deleteEntity.fulfilled, state => {
+        state.updating = false;
+        state.updateSuccess = true;
+        state.entity = {};
+      })
+      .addMatcher(isFulfilled(getEntities), (state, action) => {
+        return {
+          ...state,
+          loading: false,
+          entities: action.payload.data,
+          totalItems: parseInt(action.payload.headers['x-total-count'], 10),
+        };
+      })
+      .addMatcher(isFulfilled(createEntity, updateEntity, partialUpdateEntity), (state, action) => {
+        state.updating = false;
+        state.loading = false;
+        state.updateSuccess = true;
+        state.entity = action.payload.data;
+      })
+      .addMatcher(isPending(getEntities, getEntity), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.loading = true;
+      })
+      .addMatcher(isPending(createEntity, updateEntity, partialUpdateEntity, deleteEntity), state => {
+        state.errorMessage = null;
+        state.updateSuccess = false;
+        state.updating = true;
+      });
+  },
+});
+
+export const { reset } = AnimalPesoSlice.actions;
+
+// Reducer
+export default AnimalPesoSlice.reducer;

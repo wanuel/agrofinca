@@ -1,17 +1,15 @@
 package co.cima.agrofinca.service.impl;
 
-import co.cima.agrofinca.service.PersonaService;
 import co.cima.agrofinca.domain.Persona;
 import co.cima.agrofinca.repository.PersonaRepository;
+import co.cima.agrofinca.service.PersonaService;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * Service Implementation for managing {@link Persona}.
@@ -20,61 +18,76 @@ import java.util.Optional;
 @Transactional
 public class PersonaServiceImpl implements PersonaService {
 
-    private final Logger log = LoggerFactory.getLogger(PersonaServiceImpl.class);
+  private final Logger log = LoggerFactory.getLogger(PersonaServiceImpl.class);
 
-    private final PersonaRepository personaRepository;
+  private final PersonaRepository personaRepository;
 
-    public PersonaServiceImpl(PersonaRepository personaRepository) {
-        this.personaRepository = personaRepository;
-    }
+  public PersonaServiceImpl(PersonaRepository personaRepository) {
+    this.personaRepository = personaRepository;
+  }
 
-    /**
-     * Save a persona.
-     *
-     * @param persona the entity to save.
-     * @return the persisted entity.
-     */
-    @Override
-    public Persona save(Persona persona) {
-        log.debug("Request to save Persona : {}", persona);
-        return personaRepository.save(persona);
-    }
+  @Override
+  public Persona save(Persona persona) {
+    log.debug("Request to save Persona : {}", persona);
+    return personaRepository.save(persona);
+  }
 
-    /**
-     * Get all the personas.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Persona> findAll(Pageable pageable) {
-        log.debug("Request to get all Personas");
-        return personaRepository.findAll(pageable);
-    }
+  @Override
+  public Optional<Persona> partialUpdate(Persona persona) {
+    log.debug("Request to partially update Persona : {}", persona);
 
+    return personaRepository
+      .findById(persona.getId())
+      .map(
+        existingPersona -> {
+          if (persona.getTipoDocumento() != null) {
+            existingPersona.setTipoDocumento(persona.getTipoDocumento());
+          }
+          if (persona.getNumDocuemnto() != null) {
+            existingPersona.setNumDocuemnto(persona.getNumDocuemnto());
+          }
+          if (persona.getPrimerNombre() != null) {
+            existingPersona.setPrimerNombre(persona.getPrimerNombre());
+          }
+          if (persona.getSegundoNombre() != null) {
+            existingPersona.setSegundoNombre(persona.getSegundoNombre());
+          }
+          if (persona.getPrimerApellido() != null) {
+            existingPersona.setPrimerApellido(persona.getPrimerApellido());
+          }
+          if (persona.getSegundoApellido() != null) {
+            existingPersona.setSegundoApellido(persona.getSegundoApellido());
+          }
+          if (persona.getFechaNacimiento() != null) {
+            existingPersona.setFechaNacimiento(persona.getFechaNacimiento());
+          }
+          if (persona.getGenero() != null) {
+            existingPersona.setGenero(persona.getGenero());
+          }
 
-    /**
-     * Get one persona by id.
-     *
-     * @param id the id of the entity.
-     * @return the entity.
-     */
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Persona> findOne(Long id) {
-        log.debug("Request to get Persona : {}", id);
-        return personaRepository.findById(id);
-    }
+          return existingPersona;
+        }
+      )
+      .map(personaRepository::save);
+  }
 
-    /**
-     * Delete the persona by id.
-     *
-     * @param id the id of the entity.
-     */
-    @Override
-    public void delete(Long id) {
-        log.debug("Request to delete Persona : {}", id);
-        personaRepository.deleteById(id);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public Page<Persona> findAll(Pageable pageable) {
+    log.debug("Request to get all Personas");
+    return personaRepository.findAll(pageable);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<Persona> findOne(Long id) {
+    log.debug("Request to get Persona : {}", id);
+    return personaRepository.findById(id);
+  }
+
+  @Override
+  public void delete(Long id) {
+    log.debug("Request to delete Persona : {}", id);
+    personaRepository.deleteById(id);
+  }
 }

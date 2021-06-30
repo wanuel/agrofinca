@@ -3,6 +3,7 @@
     "lote": {
       "home": {
         "title": "Lotes",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Lote",
         "createOrEditLabel": "Create or edit a Lote",
         "notFound": "No Lotes found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Lote"
       },
+      "id": "ID",
       "nombre": "Nombre",
       "tipo": "Tipo",
       "fecha": "Fecha",

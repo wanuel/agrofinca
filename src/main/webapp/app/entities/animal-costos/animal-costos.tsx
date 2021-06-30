@@ -1,26 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, ICrudGetAllAction, TextFormat, getSortState, IPaginationBaseState, JhiPagination, JhiItemCount } from 'react-jhipster';
+import { Translate, TextFormat, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntities } from './animal-costos.reducer';
 import { IAnimalCostos } from 'app/shared/model/animal-costos.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
 import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IAnimalCostosProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
+export const AnimalCostos = (props: RouteComponentProps<{ url: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const AnimalCostos = (props: IAnimalCostosProps) => {
   const [paginationState, setPaginationState] = useState(
-    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE), props.location.search)
+    overridePaginationStateWithQueryParams(getSortState(props.location, ITEMS_PER_PAGE, 'id'), props.location.search)
   );
 
+  const animalCostosList = useAppSelector(state => state.animalCostos.entities);
+  const loading = useAppSelector(state => state.animalCostos.loading);
+  const totalItems = useAppSelector(state => state.animalCostos.totalItems);
+
   const getAllEntities = () => {
-    props.getEntities(paginationState.activePage - 1, paginationState.itemsPerPage, `${paginationState.sort},${paginationState.order}`);
+    dispatch(
+      getEntities({
+        page: paginationState.activePage - 1,
+        size: paginationState.itemsPerPage,
+        sort: `${paginationState.sort},${paginationState.order}`,
+      })
+    );
   };
 
   const sortEntities = () => {
@@ -38,7 +47,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
   useEffect(() => {
     const params = new URLSearchParams(props.location.search);
     const page = params.get('page');
-    const sort = params.get('sort');
+    const sort = params.get(SORT);
     if (page && sort) {
       const sortSplit = sort.split(',');
       setPaginationState({
@@ -53,7 +62,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
   const sort = p => () => {
     setPaginationState({
       ...paginationState,
-      order: paginationState.order === 'asc' ? 'desc' : 'asc',
+      order: paginationState.order === ASC ? DESC : ASC,
       sort: p,
     });
   };
@@ -64,16 +73,27 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
       activePage: currentPage,
     });
 
-  const { animalCostosList, match, loading, totalItems } = props;
+  const handleSyncList = () => {
+    sortEntities();
+  };
+
+  const { match } = props;
+
   return (
     <div>
-      <h2 id="animal-costos-heading">
+      <h2 id="animal-costos-heading" data-cy="AnimalCostosHeading">
         <Translate contentKey="agrofincaApp.animalCostos.home.title">Animal Costos</Translate>
-        <Link to={`${match.url}/new`} className="btn btn-primary float-right jh-create-entity" id="jh-create-entity">
-          <FontAwesomeIcon icon="plus" />
-          &nbsp;
-          <Translate contentKey="agrofincaApp.animalCostos.home.createLabel">Create new Animal Costos</Translate>
-        </Link>
+        <div className="d-flex justify-content-end">
+          <Button className="mr-2" color="info" onClick={handleSyncList} disabled={loading}>
+            <FontAwesomeIcon icon="sync" spin={loading} />{' '}
+            <Translate contentKey="agrofincaApp.animalCostos.home.refreshListLabel">Refresh List</Translate>
+          </Button>
+          <Link to={`${match.url}/new`} className="btn btn-primary jh-create-entity" id="jh-create-entity" data-cy="entityCreateButton">
+            <FontAwesomeIcon icon="plus" />
+            &nbsp;
+            <Translate contentKey="agrofincaApp.animalCostos.home.createLabel">Create new Animal Costos</Translate>
+          </Link>
+        </div>
       </h2>
       <div className="table-responsive">
         {animalCostosList && animalCostosList.length > 0 ? (
@@ -81,7 +101,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
             <thead>
               <tr>
                 <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="global.field.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+                  <Translate contentKey="agrofincaApp.animalCostos.id">ID</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
                 <th className="hand" onClick={sort('fecha')}>
                   <Translate contentKey="agrofincaApp.animalCostos.fecha">Fecha</Translate> <FontAwesomeIcon icon="sort" />
@@ -100,7 +120,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
             </thead>
             <tbody>
               {animalCostosList.map((animalCostos, i) => (
-                <tr key={`entity-${i}`}>
+                <tr key={`entity-${i}`} data-cy="entityTable">
                   <td>
                     <Button tag={Link} to={`${match.url}/${animalCostos.id}`} color="link" size="sm">
                       {animalCostos.id}
@@ -110,11 +130,11 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
                     {animalCostos.fecha ? <TextFormat type="date" value={animalCostos.fecha} format={APP_LOCAL_DATE_FORMAT} /> : null}
                   </td>
                   <td>{animalCostos.valor}</td>
-                  <td>{animalCostos.animal ? <Link to={`animal/${animalCostos.animal.id}`}>{animalCostos.animal.nombre}</Link> : ''}</td>
-                  <td>{animalCostos.evento ? <Link to={`parametros/${animalCostos.evento.id}`}>{animalCostos.evento.descripcion}</Link> : ''}</td>
+                  <td>{animalCostos.animal ? <Link to={`animal/${animalCostos.animal.id}`}>{animalCostos.animal.id}</Link> : ''}</td>
+                  <td>{animalCostos.evento ? <Link to={`parametros/${animalCostos.evento.id}`}>{animalCostos.evento.id}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${animalCostos.id}`} color="info" size="sm">
+                      <Button tag={Link} to={`${match.url}/${animalCostos.id}`} color="info" size="sm" data-cy="entityDetailsButton">
                         <FontAwesomeIcon icon="eye" />{' '}
                         <span className="d-none d-md-inline">
                           <Translate contentKey="entity.action.view">View</Translate>
@@ -125,6 +145,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
                         to={`${match.url}/${animalCostos.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
                         color="primary"
                         size="sm"
+                        data-cy="entityEditButton"
                       >
                         <FontAwesomeIcon icon="pencil-alt" />{' '}
                         <span className="d-none d-md-inline">
@@ -136,6 +157,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
                         to={`${match.url}/${animalCostos.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
                         color="danger"
                         size="sm"
+                        data-cy="entityDeleteButton"
                       >
                         <FontAwesomeIcon icon="trash" />{' '}
                         <span className="d-none d-md-inline">
@@ -156,7 +178,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
           )
         )}
       </div>
-      {props.totalItems ? (
+      {totalItems ? (
         <div className={animalCostosList && animalCostosList.length > 0 ? '' : 'd-none'}>
           <Row className="justify-content-center">
             <JhiItemCount page={paginationState.activePage} total={totalItems} itemsPerPage={paginationState.itemsPerPage} i18nEnabled />
@@ -167,7 +189,7 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
               onSelect={handlePagination}
               maxButtons={5}
               itemsPerPage={paginationState.itemsPerPage}
-              totalItems={props.totalItems}
+              totalItems={totalItems}
             />
           </Row>
         </div>
@@ -178,17 +200,4 @@ export const AnimalCostos = (props: IAnimalCostosProps) => {
   );
 };
 
-const mapStateToProps = ({ animalCostos }: IRootState) => ({
-  animalCostosList: animalCostos.entities,
-  loading: animalCostos.loading,
-  totalItems: animalCostos.totalItems,
-});
-
-const mapDispatchToProps = {
-  getEntities,
-};
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(AnimalCostos);
+export default AnimalCostos;

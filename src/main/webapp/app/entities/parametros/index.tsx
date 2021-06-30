@@ -11,12 +11,12 @@ import ParametrosDeleteDialog from './parametros-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={ParametrosDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={ParametrosUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={ParametrosUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={ParametrosDetail} />
       <ErrorBoundaryRoute path={match.url} component={Parametros} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={ParametrosDeleteDialog} />
   </>
 );
 

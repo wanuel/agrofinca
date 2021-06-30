@@ -4,9 +4,7 @@
     {
       "fieldName": "fecha",
       "fieldType": "LocalDate",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "nota",
@@ -16,9 +14,7 @@
       "fieldName": "imagen",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "any",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [

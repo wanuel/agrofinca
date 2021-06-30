@@ -1,0 +1,39 @@
+{
+  "name": "DetalleCargue",
+  "fields": [
+    {
+      "fieldName": "decaCup",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "decaEstado",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "decaJSON",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "errorCargue",
+      "otherEntityRelationshipName": "detalleCargue",
+      "relationshipName": "decaId",
+      "ownerSide": true
+    }
+  ],
+  "entityTableName": "detalle_cargue",
+  "dto": "no",
+  "pagination": "no",
+  "service": "serviceImpl",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210630205853"
+}

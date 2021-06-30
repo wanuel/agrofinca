@@ -1,0 +1,27 @@
+{
+  "agrofincaApp": {
+    "detalleCargue": {
+      "home": {
+        "title": "Detalle Cargues",
+        "refreshListLabel": "Refrescar lista",
+        "createLabel": "Crear nuevo Detalle Cargue",
+        "createOrEditLabel": "Crear o editar Detalle Cargue",
+        "notFound": "Ningún Detalle Cargues encontrado"
+      },
+      "created": "Un nuevo Detalle Cargue ha sido creado con el identificador {{ param }}",
+      "updated": "Un Detalle Cargue ha sido actualizado con el identificador {{ param }}",
+      "deleted": "Un Detalle Cargue ha sido eliminado con el identificador {{ param }}",
+      "delete": {
+        "question": "¿Seguro que quiere eliminar Detalle Cargue {{ id }}?"
+      },
+      "detail": {
+        "title": "Detalle Cargue"
+      },
+      "id": "ID",
+      "decaCup": "Deca Cup",
+      "decaEstado": "Deca Estado",
+      "decaJSON": "Deca JSON",
+      "decaId": "Deca Id"
+    }
+  }
+}

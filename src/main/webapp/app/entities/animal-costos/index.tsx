@@ -11,12 +11,12 @@ import AnimalCostosDeleteDialog from './animal-costos-delete-dialog';
 const Routes = ({ match }) => (
   <>
     <Switch>
-      <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={AnimalCostosDeleteDialog} />
       <ErrorBoundaryRoute exact path={`${match.url}/new`} component={AnimalCostosUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id/edit`} component={AnimalCostosUpdate} />
       <ErrorBoundaryRoute exact path={`${match.url}/:id`} component={AnimalCostosDetail} />
       <ErrorBoundaryRoute path={match.url} component={AnimalCostos} />
     </Switch>
+    <ErrorBoundaryRoute exact path={`${match.url}/:id/delete`} component={AnimalCostosDeleteDialog} />
   </>
 );
 

@@ -22,9 +22,7 @@
     {
       "fieldName": "fechaIngreso",
       "fieldType": "LocalDate",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "fechaSalida",
@@ -33,23 +31,17 @@
     {
       "fieldName": "cantidadBovinos",
       "fieldType": "Integer",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "cantidadEquinos",
       "fieldType": "Integer",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "cantidadMulares",
       "fieldType": "Integer",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "fechaLimpia",
@@ -67,9 +59,7 @@
       "fieldName": "ocupado",
       "fieldType": "SINO",
       "fieldValues": "S,N",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     }
   ],
   "changelogDate": "20200701025250",

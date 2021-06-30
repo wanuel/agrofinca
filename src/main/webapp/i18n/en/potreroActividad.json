@@ -3,6 +3,7 @@
     "potreroActividad": {
       "home": {
         "title": "Potrero Actividads",
+        "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Potrero Actividad",
         "createOrEditLabel": "Create or edit a Potrero Actividad",
         "notFound": "No Potrero Actividads found"
@@ -16,6 +17,7 @@
       "detail": {
         "title": "Potrero Actividad"
       },
+      "id": "ID",
       "fechaIngreso": "Fecha Ingreso",
       "fechaSalida": "Fecha Salida",
       "cantidadBovinos": "Cantidad Bovinos",

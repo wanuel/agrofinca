@@ -1,30 +1,34 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col } from 'reactstrap';
-import { Translate, ICrudGetAction, TextFormat } from 'react-jhipster';
+import { Translate, TextFormat } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './persona.reducer';
-import { IPersona } from 'app/shared/model/persona.model';
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { useAppDispatch, useAppSelector } from 'app/config/store';
 
-export interface IPersonaDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
+export const PersonaDetail = (props: RouteComponentProps<{ id: string }>) => {
+  const dispatch = useAppDispatch();
 
-export const PersonaDetail = (props: IPersonaDetailProps) => {
   useEffect(() => {
-    props.getEntity(props.match.params.id);
+    dispatch(getEntity(props.match.params.id));
   }, []);
 
-  const { personaEntity } = props;
+  const personaEntity = useAppSelector(state => state.persona.entity);
   return (
     <Row>
       <Col md="8">
-        <h2>
-          <Translate contentKey="agrofincaApp.persona.detail.title">Persona</Translate> [<b>{personaEntity.id}</b>]
+        <h2 data-cy="personaDetailsHeading">
+          <Translate contentKey="agrofincaApp.persona.detail.title">Persona</Translate>
         </h2>
         <dl className="jh-entity-details">
+          <dt>
+            <span id="id">
+              <Translate contentKey="global.field.id">ID</Translate>
+            </span>
+          </dt>
+          <dd>{personaEntity.id}</dd>
           <dt>
             <span id="tipoDocumento">
               <Translate contentKey="agrofincaApp.persona.tipoDocumento">Tipo Documento</Translate>
@@ -78,7 +82,7 @@ export const PersonaDetail = (props: IPersonaDetailProps) => {
           </dt>
           <dd>{personaEntity.genero}</dd>
         </dl>
-        <Button tag={Link} to="/persona" replace color="info">
+        <Button tag={Link} to="/persona" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
             <Translate contentKey="entity.action.back">Back</Translate>
@@ -96,13 +100,4 @@ export const PersonaDetail = (props: IPersonaDetailProps) => {
   );
 };
 
-const mapStateToProps = ({ persona }: IRootState) => ({
-  personaEntity: persona.entity,
-});
-
-const mapDispatchToProps = { getEntity };
-
-type StateProps = ReturnType<typeof mapStateToProps>;
-type DispatchProps = typeof mapDispatchToProps;
-
-export default connect(mapStateToProps, mapDispatchToProps)(PersonaDetail);
+export default PersonaDetail;
